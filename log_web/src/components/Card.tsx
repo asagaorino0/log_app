@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { StyleSheet, Image } from 'react-native';
 import { Card, Title, Paragraph, Text } from 'react-native-paper';
+import { FontAwesome } from '@expo/vector-icons';
 import Hyperlink from 'react-native-hyperlink'
 
 const styles = StyleSheet.create({
@@ -26,6 +27,8 @@ export default function SimpleCard({ contents }: { contents: any }) {
                         This text will be parsed to check for clickable strings like https://firebasestorage.googleapis.com/v0/b/log-app-6b654.appspot.com/o/images%2F2.ReactNativeCourse_2.pdf?alt=media&token=a479d2cf-55fd-4506-847a-a22393452438 and made clickable.
                     </Text>
                 </Hyperlink> */}
+                <FontAwesome name="star" size={24} />
+                <FontAwesome name="star-o" size={24} />
                 <Paragraph>{contents.name}</Paragraph>
             </Card.Content>
         </Card>
