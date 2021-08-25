@@ -37,7 +37,6 @@ function ThirdScreen({ navigation, route }) {
     const [uid, setUid] = React.useState('');
     const [name, setName] = React.useState('');
     const [user, setUser] = React.useState('');
-    const [age, setAge] = React.useState('');
     const [message, setMessage] = React.useState('');
     const db = firebase.firestore()
     React.useEffect(() => {
@@ -57,7 +56,6 @@ function ThirdScreen({ navigation, route }) {
                                     console.log(doc.id, " => ", doc.data())
                                     setUser(doc.data())
                                     setName(doc.data().name)
-                                    setAge(doc.data().age)
                                     console.log(user)
                                 })
                             })
@@ -70,7 +68,6 @@ function ThirdScreen({ navigation, route }) {
         await
             db.collection('messages').add({
                 name: `${name}`,
-                age: `${age}`,
                 message: `${message}`,
                 timestamp: firebase.firestore.FieldValue.serverTimestamp(),
                 uid: `${uid}`,
@@ -116,34 +113,34 @@ function ThirdScreen({ navigation, route }) {
     );
 }
 
-export default function App() {
-    const Tab = createMaterialBottomTabNavigator();
-    const Stack = createStackNavigator();
-    return (
-        <NavigationContainer independent={true}>
-            <Tab.Navigator initialRouteName="home" component={ThirdScreen}>
-                <Tab.Screen
-                    name="Third"
-                    component={ThirdScreen}
-                    options={{
-                        tabBarLabel: 'Homeeeeee',
-                        tabBarIcon: ({ color }) => (
-                            <MaterialCommunityIcons name="home" color={color} size={26} />
-                        )
-                    }}
-                />
-                <Tab.Screen
-                    name="Fourth"
-                    component={FourthScreen}
-                    options={{
-                        tabBarLabel: 'User',
-                        tabBarIcon: ({ color }) => (
-                            <FontAwesome name="user-circle-o" size={24} color={color} />
-                        )
-                    }}
-                />
-            </Tab.Navigator>
-        </NavigationContainer >
-    );
-}
+// export default function App() {
+//     const Tab = createMaterialBottomTabNavigator();
+//     const Stack = createStackNavigator();
+//     return (
+//         <NavigationContainer independent={true}>
+//             <Tab.Navigator initialRouteName="home" component={ThirdScreen}>
+//                 <Tab.Screen
+//                     name="Third"
+//                     component={ThirdScreen}
+//                     options={{
+//                         tabBarLabel: 'Homeeeeee',
+//                         tabBarIcon: ({ color }) => (
+//                             <MaterialCommunityIcons name="home" color={color} size={26} />
+//                         )
+//                     }}
+//                 />
+//                 <Tab.Screen
+//                     name="Fourth"
+//                     component={FourthScreen}
+//                     options={{
+//                         tabBarLabel: 'User',
+//                         tabBarIcon: ({ color }) => (
+//                             <FontAwesome name="user-circle-o" size={24} color={color} />
+//                         )
+//                     }}
+//                 />
+//             </Tab.Navigator>
+//         </NavigationContainer >
+//     );
+// }
 

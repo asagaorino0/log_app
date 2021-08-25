@@ -13,7 +13,7 @@ export default function MsgList({ navigation }: { navigation: any }) {
     const [name, setName] = React.useState('');
     const [user, setUser] = React.useState('');
     const [age, setAge] = React.useState('');
-    const [messages, setMessages] = React.useState('');
+    const [contents, setContents] = React.useState('');
     const db = firebase.firestore()
     React.useEffect(() => {
         firebase.auth().signInAnonymously()
@@ -24,14 +24,15 @@ export default function MsgList({ navigation }: { navigation: any }) {
                         setUid(uid)
                         firebase
                             .firestore()
-                            .collection("messages")
+                            .collection("contents")
                             .orderBy("timestamp")
                             .onSnapshot((snapshot) => {
-                                const messages = snapshot.docs.map((doc) => {
+                                const contents = snapshot.docs.map((doc) => {
                                     return doc.id &&
                                         doc.data()
                                 });
-                                setMessages(messages);
+                                setContents(contents);
+                                console.log(contents)
                             })
                     }
                 })
@@ -50,39 +51,12 @@ export default function MsgList({ navigation }: { navigation: any }) {
             }}>
 
             <ScrollView ref={ref}>
-                {/* <ScrollView
-                ref={ref => this.ScrollView = ref}
-                onContentSizeChange={(contentWidth, contentHeight) => {
-                    this.scrollView.scrollToEnd({ animated: true });
-                }}> */}
-                {/* <ScrollView ref={ref}
-                onContentSizeChange={(contentWidth, contentHeight) => scrollTo({ listHeight: contentHeight, animated: true })}> */}
-
-                {/* <ScrollView
-                ref={ref}
-                onContentSizeChange={(contentWidth, contentHeight) => {
-                    scrollTo({ listHeight: contentHeight })
-                }}
-                onLayout={(e) => {
-                    const height = e.nativeEvent.layout.heigh
-                    scrollTo({ scrollViewHeight: height })
-                }}
-            > */}
-                {messages.length !== 0 &&
-                    messages.map((messages, index) => {
-                        if (messages.uid === uid) {
-                            return (
-                                <MyCard messages={messages} key={`${messages.id} `} style={{ justifyContent: 'flex-end' }} />
-
-                            )
-                        } else {
-                            return (
-                                <Card messages={messages} key={`${messages.id} `} />
-
-                            )
-                        }
-                    })
-                }
+                {contents.length !== 0 &&
+                    contents.map((contents, index) => {
+                        return (
+                            <Card contents={contents} key={`${contents.id} `} />
+                        )
+                    })}
             </ScrollView>
         </TouchableWithoutFeedback >
     );

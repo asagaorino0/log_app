@@ -26,7 +26,7 @@ const styles = StyleSheet.create({
 
 export default function SubScreen({ navigation }: { navigation: any }) {
     const [uid, setUid] = React.useState('');
-    const [name, setName] = React.useState('');
+    const [name, setName] = React.useState("");
     const [age, setAge] = React.useState('');
     const [user, setUser] = React.useState('');
     const db = firebase.firestore()
@@ -57,7 +57,7 @@ export default function SubScreen({ navigation }: { navigation: any }) {
     const onPress = () => {
         db.collection('users').doc(`${uid}`).set({
             name: `${name}`,
-            age: `${age}`,
+            id: `${uid}`,
             timestamp: firebase.firestore.FieldValue.serverTimestamp(),
         }, { merge: true }//←上書きされないおまじない
         )
@@ -77,33 +77,15 @@ export default function SubScreen({ navigation }: { navigation: any }) {
                 <View>
                     <Text>name</Text>
                     <TextInput
-                        // multiline
-                        placeholder=""
                         style={styles.input}
                         value={name}
                         onChangeText={setName}
                     />
-                    {/* <Text>age</Text>
-                    <TextInput
-                        multiline
-                        placeholder=""
-                        style={styles.input}
-                        value={age}
-                        onChangeText={setAge}
-                    /> */}
                     <TouchableHighlight onPress={onPress}>
                         <View style={styles.button}>
                             <Text>Save User Info</Text>
                         </View>
                     </TouchableHighlight>
-                    {/* <Button
-                        title="Go to Third"
-                        onPress={() => {
-                            navigation.navigate({
-                                name: 'Third',
-                            });
-                        }}
-                    /> */}
                 </View>
             </View>
         </TouchableWithoutFeedback>
