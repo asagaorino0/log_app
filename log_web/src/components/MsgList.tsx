@@ -4,8 +4,8 @@ import firebase from "../lib/firebase";
 import "firebase/firestore";
 import "firebase/auth";
 import { useScrollToTop } from '@react-navigation/native';
-import Card from '../screens/Card'
-import MyCard from '../screens/MyCard'
+import Card from '../components/Card'
+
 
 export default function MsgList({ navigation }: { navigation: any }) {
 

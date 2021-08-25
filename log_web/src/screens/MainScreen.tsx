@@ -2,7 +2,7 @@ import * as React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import firebase from "../lib/firebase";
 import "firebase/firestore";
-import MsgList from '../screens/MsgList'
+import MsgList from '../components/MsgList'
 
 export default function MainScreen({ navigation, route }: { navigation: any, route: any }) {
     const [uid, setUid] = React.useState(`${route.params?.uid}`);
