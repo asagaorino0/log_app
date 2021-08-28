@@ -27,21 +27,22 @@ const MainStack = () => (
             component={MainScreen}
             options={{ headerShown: false }}
         />
-        <Stack.Screen name="MsgList" component={MsgListNavigator} />
+        {/* <Stack.Screen name="MsgList" component={MsgListNavigator} /> */}
     </Stack.Navigator>
 );
 
 export const MainNavigator = () => (
     <RootStack.Navigator>
         <RootStack.Group>
-            {/* <RootStack.Screen
+            <RootStack.Screen
                 name="Main"
                 component={MainStack}
                 options={{ headerShown: false }}
-            /> */}
-            <RootStack.Screen name="Main" component={MainScreen} />
+            />
+            {/* <RootStack.Screen name="Main" component={MainScreen} /> */}
             <RootStack.Screen name="DScreen" component={DScreen} />
-            <RootStack.Screen name="MsgList" component={MsgListNavigator} />
+            {/* <RootStack.Screen name="Card" component={Card} /> */}
+            {/* <RootStack.Screen name="MsgList" component={MsgListNavigator} /> */}
         </RootStack.Group>
         <RootStack.Group screenOptions={{ presentation: 'modal' }}>
             <RootStack.Screen name="AScreen" component={AScreen} />

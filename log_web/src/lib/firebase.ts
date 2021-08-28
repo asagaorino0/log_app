@@ -6,7 +6,7 @@ import Constants from 'expo-constants';
 if (!firebase.apps.length) {
     firebase.initializeApp(Constants.manifest.extra!.firebase);
 }
-export const firesstore = firebase.firestore()
+export const firestore = firebase.firestore()
 export const db = firebase.firestore()
 export const auth = firebase.auth()
 export const storage = firebase.storage()

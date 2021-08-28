@@ -1,9 +1,7 @@
 import * as React from 'react';
-import { StyleSheet, Image, Dimensions } from 'react-native';
+import { StyleSheet, Image, Dimensions, TouchableOpacity } from 'react-native';
 import { Card, Title, Paragraph, Text, Button } from 'react-native-paper';
 import { FontAwesome } from '@expo/vector-icons';
-import Hyperlink from 'react-native-hyperlink'
-import A from '../screens/A';
 import { StackNavigationProp } from "@react-navigation/stack";
 
 const { width } = Dimensions.get("window");
@@ -21,42 +19,35 @@ const styles = StyleSheet.create({
     },
 })
 
-{/* <Button
-title="Go to Profile"
-onPress={() => navigation.navigate('Profile')}
-/> */}
 type RootStackParamList = {
     Home: undefined;
-    Profile: { userId: string };
+    AScreen: { userId: string };
     Feed: { sort: 'latest' | 'top' } | undefined;
 };
 
-type Props = StackNavigationProp<RootStackParamList, 'Home'>;
+type Props = StackNavigationProp<RootStackParamList, 'AScreen'>;
 
-export default function SimpleCard({ contents }: { contents: any }, { navigation, navigate }: { navigation, navigate: Props }) {
-    const onPressSrc = () => {
-        () => navigation.navigate('Home')
-    };
+export default function SimpleCard({ contents, navigation }: { contents, navigation: any }
+) {
     return (
 
         <Card style={styles.container} >
             <Card.Content>
                 <Title>{contents.title}</Title>
+                {/* <TouchableOpacity
+                    onPress={() => navigation.navigate('Ascreen')}> */}
                 <Image
                     source={{ uri: `${contents.src}` }}
                     style={styles.image}
-                    onPress={onPressSrc}
+                // onPress={onPressSrc}
                 // onPress={() => navigation.navigate('A')}
                 // onClick={onPressSrc}
                 />
+                {/* </TouchableOpacity> */}
                 <FontAwesome name="star" size={24} />
                 <FontAwesome name="star-o" size={24} />
                 <Paragraph>{contents.name}</Paragraph>
-                {/* <Button
-                    title="Go to Home"
-                    onPress={onPressSrc}
-                /> */}
             </Card.Content>
-        </Card>
+        </Card >
     )
 }

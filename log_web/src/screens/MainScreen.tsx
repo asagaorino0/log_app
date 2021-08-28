@@ -1,57 +1,78 @@
 import * as React from 'react';
-import { View, Text, StyleSheet, Button } from 'react-native';
+import { View, ScrollView, Text, StyleSheet, Button, TouchableOpacity, Dimensions } from 'react-native';
 import firebase from "../lib/firebase";
 import "firebase/firestore";
 import MsgList from '../components/MsgList'
+import Card from '../components/Card'
 
-export default function MainScreen({ navigation }) {
-    // export default function MainScreen({ navigation, route }: { navigation: any, route: any }) {
-    //     const [uid, setUid] = React.useState(`${route.params?.uid}`);
-    //     const [name, setName] = React.useState('');
-    //     const [user, setUser] = React.useState('');
-    //     const [age, setAge] = React.useState('');
-    //     React.useEffect(() => {
-    //         firebase.auth().signInAnonymously()
-    //             .then(() => {
-    //                 firebase.auth().onAuthStateChanged((user) => {
-    //                     if (user) {
-    //                         var uid = user.uid;
-    //                         setUid(uid)
-    //                         firebase
-    //                             .firestore()
-    //                             .collection("users")
-    //                             .where("id", "==", `${user.uid}`)
-    //                             .get()
-    //                             .then((querySnapshot) => {
-    //                                 querySnapshot.forEach((doc) => {
-    //                                     console.log(doc.id, " => ", doc.data())
-    //                                     setName(doc.data().name)
-    //                                 })
-    //                             })
-    //                     }
-    //                 })
-    //             })
-    //     }, [])
+// export default function MainScreen({ navigation }) {
+export default function MainScreen({ navigation, route }: { navigation: any, route: any }) {
+    const [uid, setUid] = React.useState(`${route.params?.uid}`);
+    const ref = React.useRef(null);
+    // const [name, setName] = React.useState('');
+    // const [user, setUser] = React.useState('');
+    // const [age, setAge] = React.useState('');
+    const [contents, setContents] = React.useState('');
+    React.useEffect(() => {
+        firebase.auth().signInAnonymously()
+            .then(() => {
+                firebase.auth().onAuthStateChanged((user) => {
+                    if (user) {
+                        var uid = user.uid;
+                        setUid(uid)
+                        firebase
+                            .firestore()
+                            .collection("contents")
+                            .orderBy("title")
+                            .onSnapshot((snapshot) => {
+                                const contents = snapshot.docs.map((doc) => {
+                                    return doc.id &&
+                                        doc.data()
+                                });
+                                setContents(contents);
+                                console.log(contents)
+                            })
+                    }
+                })
+            })
+    }, [])
 
     return (
-        <View style={styles.container}>
+        // <View style={styles.container}>
+
+        <ScrollView ref={ref} style={styles.container}  >
+
+            {contents.length !== 0 &&
+                contents.map((contents) => {
+                    return (
+                        <TouchableOpacity
+                            // <TouchableOpacity style={styles.container}
+                            onPress={() => navigation.navigate('DScreen')}>
+                            <Card
+                                contents={contents}
+                                key={`${contents.name} `}
+                            // onPress={onPressSrc}
+                            // onPress={() => navigation.navigate('AScreen')}
+                            // onClick={() => navigation.navigate('Profile')}
+                            />
+                        </TouchableOpacity>
+                    )
+                })}
             <Button
                 onPress={() => navigation.navigate('AScreen')}
-                title="Open Modal　A"
+                title="Open Modal　AA"
             />
             <Button
                 onPress={() => navigation.navigate('DScreen')}
-                title="Open Modal　D"
+                title="Open Modal　DD"
             />
-            <MsgList />
-        </View>
-
-        // <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-        //     <Text style={{ margin: 10 }}>uid: {uid}</Text>
-        //     <Text style={{ margin: 10 }}>name: {`${name}`}</Text>
-        // </View>
+        </ScrollView>
+        //* </View> */ 
     );
 }
+
+const { width } = Dimensions.get("window");
+const CONTAINER_WIDTH = width / 2;
 
 const styles = StyleSheet.create({
     button: {
@@ -60,8 +81,8 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     },
     container: {
-        flex: 1,
-        justifyContent: 'center',
+        width: CONTAINER_WIDTH,
+        padding: 8,
     },
     display: {
         flexDirection: 'row',

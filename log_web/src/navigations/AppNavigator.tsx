@@ -45,7 +45,7 @@ export const AppNavigator = () => {
                             <FontAwesome name="search" size={24} color={color} />
                         )
                     }} /> */}
-                <Tab.Screen name="Main" component={MsgListNavigator}
+                <Tab.Screen name="Main" component={MainNavigator}
                     options={{
                         tabBarLabel: 'Main',
                         tabBarIcon: ({ color }) => (
