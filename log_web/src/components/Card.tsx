@@ -1,35 +1,61 @@
 import * as React from 'react';
-import { StyleSheet, Image } from 'react-native';
-import { Card, Title, Paragraph, Text } from 'react-native-paper';
+import { StyleSheet, Image, Dimensions } from 'react-native';
+import { Card, Title, Paragraph, Text, Button } from 'react-native-paper';
 import { FontAwesome } from '@expo/vector-icons';
 import Hyperlink from 'react-native-hyperlink'
+import A from '../screens/A';
+import { StackNavigationProp } from "@react-navigation/stack";
 
+const { width } = Dimensions.get("window");
+const CONTAINER_WIDTH = width / 2;
+const PADDING = 16;
+const IMAGE_WIDTH = CONTAINER_WIDTH - PADDING * 2;
 const styles = StyleSheet.create({
-    pink: {
-        color: '#fff',
-        // width: '45%',
-        margin: 5,
-        borderRadius: 10,
+    image: {
+        width: IMAGE_WIDTH * 0.9,
+        height: IMAGE_WIDTH * 0.7,
+    },
+    container: {
+        width: width / 2 * 0.9,
+        padding: 6,
     },
 })
 
-export default function SimpleCard({ contents }: { contents: any }) {
+{/* <Button
+title="Go to Profile"
+onPress={() => navigation.navigate('Profile')}
+/> */}
+type RootStackParamList = {
+    Home: undefined;
+    Profile: { userId: string };
+    Feed: { sort: 'latest' | 'top' } | undefined;
+};
+
+type Props = StackNavigationProp<RootStackParamList, 'Home'>;
+
+export default function SimpleCard({ contents }: { contents: any }, { navigation, navigate }: { navigation, navigate: Props }) {
+    const onPressSrc = () => {
+        () => navigation.navigate('Home')
+    };
     return (
-        <Card>
+
+        <Card style={styles.container} >
             <Card.Content>
                 <Title>{contents.title}</Title>
                 <Image
                     source={{ uri: `${contents.src}` }}
-                    style={{ width: 200, height: 200 }}
+                    style={styles.image}
+                    onPress={onPressSrc}
+                // onPress={() => navigation.navigate('A')}
+                // onClick={onPressSrc}
                 />
-                {/* <Hyperlink linkDefault={true}>
-                    <Text >
-                        This text will be parsed to check for clickable strings like https://firebasestorage.googleapis.com/v0/b/log-app-6b654.appspot.com/o/images%2F2.ReactNativeCourse_2.pdf?alt=media&token=a479d2cf-55fd-4506-847a-a22393452438 and made clickable.
-                    </Text>
-                </Hyperlink> */}
                 <FontAwesome name="star" size={24} />
                 <FontAwesome name="star-o" size={24} />
                 <Paragraph>{contents.name}</Paragraph>
+                {/* <Button
+                    title="Go to Home"
+                    onPress={onPressSrc}
+                /> */}
             </Card.Content>
         </Card>
     )

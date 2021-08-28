@@ -1,39 +1,48 @@
 import * as React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, Button } from 'react-native';
 import firebase from "../lib/firebase";
 import "firebase/firestore";
 import MsgList from '../components/MsgList'
 
-export default function MainScreen({ navigation, route }: { navigation: any, route: any }) {
-    const [uid, setUid] = React.useState(`${route.params?.uid}`);
-    const [name, setName] = React.useState('');
-    const [user, setUser] = React.useState('');
-    const [age, setAge] = React.useState('');
-    React.useEffect(() => {
-        firebase.auth().signInAnonymously()
-            .then(() => {
-                firebase.auth().onAuthStateChanged((user) => {
-                    if (user) {
-                        var uid = user.uid;
-                        setUid(uid)
-                        firebase
-                            .firestore()
-                            .collection("users")
-                            .where("id", "==", `${user.uid}`)
-                            .get()
-                            .then((querySnapshot) => {
-                                querySnapshot.forEach((doc) => {
-                                    console.log(doc.id, " => ", doc.data())
-                                    setName(doc.data().name)
-                                })
-                            })
-                    }
-                })
-            })
-    }, [])
+export default function MainScreen({ navigation }) {
+    // export default function MainScreen({ navigation, route }: { navigation: any, route: any }) {
+    //     const [uid, setUid] = React.useState(`${route.params?.uid}`);
+    //     const [name, setName] = React.useState('');
+    //     const [user, setUser] = React.useState('');
+    //     const [age, setAge] = React.useState('');
+    //     React.useEffect(() => {
+    //         firebase.auth().signInAnonymously()
+    //             .then(() => {
+    //                 firebase.auth().onAuthStateChanged((user) => {
+    //                     if (user) {
+    //                         var uid = user.uid;
+    //                         setUid(uid)
+    //                         firebase
+    //                             .firestore()
+    //                             .collection("users")
+    //                             .where("id", "==", `${user.uid}`)
+    //                             .get()
+    //                             .then((querySnapshot) => {
+    //                                 querySnapshot.forEach((doc) => {
+    //                                     console.log(doc.id, " => ", doc.data())
+    //                                     setName(doc.data().name)
+    //                                 })
+    //                             })
+    //                     }
+    //                 })
+    //             })
+    //     }, [])
 
     return (
         <View style={styles.container}>
+            <Button
+                onPress={() => navigation.navigate('AScreen')}
+                title="Open Modal　A"
+            />
+            <Button
+                onPress={() => navigation.navigate('DScreen')}
+                title="Open Modal　D"
+            />
             <MsgList />
         </View>
 

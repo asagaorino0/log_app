@@ -35,7 +35,7 @@ export default function UploadScreen({ navigation, route, props }: { navigation:
     const [uid, setUid] = React.useState(`${route.params?.uid}`);
     const [name, setName] = React.useState('');
     const [user, setUser] = React.useState('');
-    const [message, setMessage] = React.useState('');
+    const [url, setUrl] = React.useState('');
     const [title, setTitle] = React.useState("");
     const [dsc, setDsc] = React.useState("");
     const db = firebase.firestore()
@@ -65,11 +65,12 @@ export default function UploadScreen({ navigation, route, props }: { navigation:
     const handleCreate = async () => {
         // if (e.key === 'Enter') {
         await
-            db.collection('contents').add({
+            db.collection('review').add({
                 name: `${name}`,
                 title,
                 src: `${src}`,
                 dsc,
+                url,
                 timestamp: firebase.firestore.FieldValue.serverTimestamp(),
                 star: 0,
 
@@ -78,9 +79,11 @@ export default function UploadScreen({ navigation, route, props }: { navigation:
                     // console.log("Document successfully written!:", docref.id);
                     setTitle("");
                     setSrc("");
+                    setDsc("");
+                    setUrl("");
                     setMyFiles([]);
                     setClickable(false);
-                    db.collection("contents").doc(docref.id).set({
+                    db.collection('review').doc(docref.id).set({
                         id: docref.id,
                     }, { merge: true }//←上書きされないおまじない
                     )
@@ -151,6 +154,12 @@ export default function UploadScreen({ navigation, route, props }: { navigation:
                 style={styles.inputtt}
                 value={dsc}
                 onChangeText={setDsc}
+            />
+            <Text>url</Text>
+            <TextInput
+                style={styles.inputtt}
+                value={url}
+                onChangeText={setUrl}
             />
             <Card>
                 <Card.Content>
