@@ -193,19 +193,5 @@ export default function UploadScreen({ navigation, route, props }: { navigation:
             </Card>
             <FontAwesome name="send" onClick={handleCreate} size={120} />
         </View>
-
-
-
-        // <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-        //     <Text>Home Screen</Text>
-        //     <Button
-        //         title="Go to Profile"
-        //         onPress={() => navigation.navigate('Profile')}
-        //     />
-        //     <Button
-        //         title="log in"
-        //         onPress={() => navigation.navigate('Main')}
-        //     />
-        // </View>
     )
 }

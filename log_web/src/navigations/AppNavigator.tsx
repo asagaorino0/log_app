@@ -24,13 +24,6 @@ export const AppNavigator = () => {
 
         <NavigationContainer>
             <Tab.Navigator>
-                {/* <Tab.Screen name="Home" component={MainNavigator}
-                    options={{
-                        tabBarLabel: 'Homeeeeee',
-                        tabBarIcon: ({ color }) => (
-                            <MaterialCommunityIcons name="home" size={26} color={color} />
-                        )
-                    }} /> */}
                 <Tab.Screen name="Home" component={HomeScreen}
                     options={{
                         tabBarLabel: 'Homeeeeee',
@@ -38,13 +31,6 @@ export const AppNavigator = () => {
                             <MaterialCommunityIcons name="home" size={26} color={color} />
                         )
                     }} />
-                {/* <Tab.Screen name="Main" component={MainScreen}
-                    options={{
-                        tabBarLabel: 'Main',
-                        tabBarIcon: ({ color }) => (
-                            <FontAwesome name="search" size={24} color={color} />
-                        )
-                    }} /> */}
                 <Tab.Screen name="Main" component={MainNavigator}
                     options={{
                         tabBarLabel: 'Main',
@@ -72,42 +58,3 @@ export const AppNavigator = () => {
 
     );
 };
-
-
-// export default function HomeScreen({ navigation }: { navigation: any }) {
-//     const Tab = createMaterialBottomTabNavigator();
-// return (
-//     <NavigationContainer independent={true}>
-//         <Tab.Navigator>
-//             <Tab.Screen name="Home" component={HomeScreen}
-//                 options={{
-//                     tabBarLabel: 'Homeeeeee',
-//                     tabBarIcon: ({ color }) => (
-//                         <MaterialCommunityIcons name="home" size={26} color={color} />
-//                     )
-//                 }} />
-{/* <Tab.Screen name="Main" component={MainScreen}
-                    options={{
-                        tabBarLabel: 'Main',
-                        tabBarIcon: ({ color }) => (
-                            <FontAwesome name="search" size={24} color={color} />
-                        )
-                    }} />
-                <Tab.Screen name="Upload" component={UploadScreen}
-                    options={{
-                        tabBarLabel: 'Upload',
-                        tabBarIcon: ({ color }) => (
-                            <FontAwesome name="plus" size={24} color={color} />
-                        )
-                    }} />
-                <Tab.Screen name="Profile" component={SubScreen}
-                    options={{
-                        tabBarLabel: 'Profile',
-                        tabBarIcon: ({ color }) => (
-                            <FontAwesome name="user-circle-o" size={24} color={color} />
-                        )
-                    }} /> */}
-//             </Tab.Navigator>
-//         </NavigationContainer>
-//     );
-// }

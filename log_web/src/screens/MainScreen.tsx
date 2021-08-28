@@ -2,10 +2,8 @@ import * as React from 'react';
 import { View, ScrollView, Text, StyleSheet, Button, TouchableOpacity, Dimensions } from 'react-native';
 import firebase from "../lib/firebase";
 import "firebase/firestore";
-import MsgList from '../components/MsgList'
 import Card from '../components/Card'
 
-// export default function MainScreen({ navigation }) {
 export default function MainScreen({ navigation, route }: { navigation: any, route: any }) {
     const [uid, setUid] = React.useState(`${route.params?.uid}`);
     const ref = React.useRef(null);
@@ -45,15 +43,12 @@ export default function MainScreen({ navigation, route }: { navigation: any, rou
             {contents.length !== 0 &&
                 contents.map((contents) => {
                     return (
-                        <TouchableOpacity
-                            // <TouchableOpacity style={styles.container}
+                        // <TouchableOpacity
+                        <TouchableOpacity style={styles.container}
                             onPress={() => navigation.navigate('DScreen')}>
                             <Card
                                 contents={contents}
                                 key={`${contents.name} `}
-                            // onPress={onPressSrc}
-                            // onPress={() => navigation.navigate('AScreen')}
-                            // onClick={() => navigation.navigate('Profile')}
                             />
                         </TouchableOpacity>
                     )

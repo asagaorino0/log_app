@@ -30,20 +30,13 @@ type Props = StackNavigationProp<RootStackParamList, 'AScreen'>;
 export default function SimpleCard({ contents, navigation }: { contents, navigation: any }
 ) {
     return (
-
         <Card style={styles.container} >
             <Card.Content>
                 <Title>{contents.title}</Title>
-                {/* <TouchableOpacity
-                    onPress={() => navigation.navigate('Ascreen')}> */}
                 <Image
                     source={{ uri: `${contents.src}` }}
                     style={styles.image}
-                // onPress={onPressSrc}
-                // onPress={() => navigation.navigate('A')}
-                // onClick={onPressSrc}
                 />
-                {/* </TouchableOpacity> */}
                 <FontAwesome name="star" size={24} />
                 <FontAwesome name="star-o" size={24} />
                 <Paragraph>{contents.name}</Paragraph>
