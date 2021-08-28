@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Button, Text, View, StyleSheet, TextInput } from "react-native";
 import firebase from "../lib/firebase";
-import "firebase/firestore";
+import firestore from "../lib/firebase";
 import { useDropzone } from "react-dropzone";
 import { storage } from "../lib/firebase";
 import { Card, Title, Paragraph } from 'react-native-paper';
