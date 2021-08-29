@@ -9,27 +9,6 @@ import { FontAwesome } from '@expo/vector-icons';
 import { FormProvider, useForm, useFormContext } from 'react-hook-form'
 import { Input } from 'react-native-elements';
 
-const styles = StyleSheet.create({
-    titleText: {
-        marginTop: 5,
-        marginBottom: 30,
-        borderRadius: 4,
-        justifyContent: "center",
-        alignItems: "center",
-        fontSize: 20,
-        fontWeight: "bold",
-    },
-    button: {
-        alignItems: "center",
-        padding: 10
-    },
-    inputtt: {
-        height: 20,
-        borderColor: 'gray',
-        borderWidth: 1
-    },
-});
-
 export default function UploadScreen({ navigation, route, props }: { navigation: any, route: any, props: Props }) {
     //現在ログインしているユーザーを取得する
     const [uid, setUid] = React.useState(`${route.params?.uid}`);
@@ -195,3 +174,23 @@ export default function UploadScreen({ navigation, route, props }: { navigation:
         </View>
     )
 }
+const styles = StyleSheet.create({
+    titleText: {
+        marginTop: 5,
+        marginBottom: 30,
+        borderRadius: 4,
+        justifyContent: "center",
+        alignItems: "center",
+        fontSize: 20,
+        fontWeight: "bold",
+    },
+    button: {
+        alignItems: "center",
+        padding: 10
+    },
+    inputtt: {
+        height: 20,
+        borderColor: 'gray',
+        borderWidth: 1
+    },
+});

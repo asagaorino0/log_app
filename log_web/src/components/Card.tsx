@@ -4,31 +4,6 @@ import { Card, Title, Paragraph, Text, Button } from 'react-native-paper';
 import { FontAwesome } from '@expo/vector-icons';
 import { StackNavigationProp } from "@react-navigation/stack";
 
-const { width } = Dimensions.get("window");
-const CONTAINER_WIDTH = width / 2;
-const PADDING = 16;
-const IMAGE_WIDTH = CONTAINER_WIDTH - PADDING * 2;
-const styles = StyleSheet.create({
-    image: {
-        width: IMAGE_WIDTH,
-        height: IMAGE_WIDTH * 0.7,
-    },
-    container: {
-        width: width / 2,
-        backgroundColor: "#fff",
-        // padding: 6,
-        // backgroundColor: 'red',
-    },
-})
-
-// type RootStackParamList = {
-//     Home: undefined;
-//     AScreen: { userId: string };
-//     Feed: { sort: 'latest' | 'top' } | undefined;
-// };
-
-// type Props = StackNavigationProp<RootStackParamList, 'AScreen'>;
-
 type card = {
     // contents: [],
     navigation: any,
@@ -57,3 +32,21 @@ export default function SimpleCard({ contents }: { contents: card }
         </Card >
     )
 }
+
+const { width } = Dimensions.get("window");
+const CONTAINER_WIDTH = width / 2;
+const PADDING = 16;
+const IMAGE_WIDTH = CONTAINER_WIDTH - PADDING * 2;
+const styles = StyleSheet.create({
+    image: {
+        width: IMAGE_WIDTH,
+        height: IMAGE_WIDTH * 0.7,
+    },
+    container: {
+        width: width / 2,
+        backgroundColor: "#fff",
+        // padding: 6,
+        // backgroundColor: 'red',
+    },
+})
+

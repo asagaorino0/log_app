@@ -3,27 +3,6 @@ import { StyleSheet, Button, View, Text, TextInput, TouchableHighlight, Touchabl
 import firebase from "../lib/firebase";
 import "firebase/firestore";
 
-const styles = StyleSheet.create({
-    titleText: {
-        marginTop: 5,
-        marginBottom: 30,
-        borderRadius: 4,
-        justifyContent: "center",
-        alignItems: "center",
-        fontSize: 20,
-        fontWeight: "bold",
-    },
-    button: {
-        alignItems: "center",
-        padding: 10
-    },
-    input: {
-        height: 20,
-        borderColor: 'gray',
-        borderWidth: 1
-    },
-});
-
 export default function SubScreen({ navigation }: { navigation: any }) {
     const [uid, setUid] = React.useState('');
     const [name, setName] = React.useState("");
@@ -91,3 +70,23 @@ export default function SubScreen({ navigation }: { navigation: any }) {
         </TouchableWithoutFeedback>
     );
 }
+const styles = StyleSheet.create({
+    titleText: {
+        marginTop: 5,
+        marginBottom: 30,
+        borderRadius: 4,
+        justifyContent: "center",
+        alignItems: "center",
+        fontSize: 20,
+        fontWeight: "bold",
+    },
+    button: {
+        alignItems: "center",
+        padding: 10
+    },
+    input: {
+        height: 20,
+        borderColor: 'gray',
+        borderWidth: 1
+    },
+});
