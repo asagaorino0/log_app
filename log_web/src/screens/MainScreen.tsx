@@ -3,9 +3,9 @@ import { SafeAreaView, View, FlatList, Text, StyleSheet, Image, Button, Touchabl
 import firebase from "../lib/firebase";
 import firestore from "../lib/firebase";
 import Card from '../components/Card'
-import { Divider } from 'react-native-elements';
+// import { Divider } from 'react-native-elements';
 // import { Card, Title, Paragraph } from 'react-native-paper';
-import { FontAwesome } from '@expo/vector-icons';
+// import { FontAwesome } from '@expo/vector-icons';
 // import { makeStyles } from '@material-ui/core/styles';
 
 export default function MainScreen({ navigation, route }: { navigation: any, route: any }) {
@@ -40,7 +40,7 @@ export default function MainScreen({ navigation, route }: { navigation: any, rou
     }, [])
 
     interface card {
-        contents: [],
+        // contents: [],
         navigation: any,
         key: any
         src: string
@@ -49,35 +49,6 @@ export default function MainScreen({ navigation, route }: { navigation: any, rou
         star: number
         id: string
     }
-
-    const renderPerson = ({ contents }: { contents: card }) => {
-        // const renderPerson = () => {
-        console.log(contents)
-        // return (
-        //     <Card style={styles.container} >
-        //         <Card.Content>
-        //             <Title>{contents.title}</Title>
-        //             <Image
-        //                 source={{ uri: `${contents.src}` }}
-        //                 style={styles.image}
-        //             />
-        //             <FontAwesome name="star" size={24} />
-        //             <FontAwesome name="star-o" size={24} />
-        //             <Paragraph>{contents.name}</Paragraph>
-        //         </Card.Content>
-        //     </Card >
-        // )
-        return (
-            <View style={styles.container}>
-                <View>
-                    <Text>{contents.name}</Text>
-                </View>
-                <Divider />
-            </View>
-        )
-
-    }
-
 
     return (
         <SafeAreaView style={styles.container} >

@@ -30,7 +30,7 @@ const styles = StyleSheet.create({
 // type Props = StackNavigationProp<RootStackParamList, 'AScreen'>;
 
 type card = {
-    contents: [],
+    // contents: [],
     navigation: any,
     key: any
     src: string
