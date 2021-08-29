@@ -1,8 +1,9 @@
 import * as React from 'react';
 import { View, ScrollView, Text, StyleSheet, Button, TouchableOpacity, Dimensions } from 'react-native';
 import firebase from "../lib/firebase";
-import "firebase/firestore";
+import firestore from "../lib/firebase";
 import Card from '../components/Card'
+// import { makeStyles } from '@material-ui/core/styles';
 
 export default function MainScreen({ navigation, route }: { navigation: any, route: any }) {
     const [uid, setUid] = React.useState(`${route.params?.uid}`);
@@ -10,7 +11,7 @@ export default function MainScreen({ navigation, route }: { navigation: any, rou
     // const [name, setName] = React.useState('');
     // const [user, setUser] = React.useState('');
     // const [age, setAge] = React.useState('');
-    const [contents, setContents] = React.useState('');
+    const [contents, setContents] = React.useState([]);
     React.useEffect(() => {
         firebase.auth().signInAnonymously()
             .then(() => {
@@ -23,7 +24,7 @@ export default function MainScreen({ navigation, route }: { navigation: any, rou
                             .collection("contents")
                             .orderBy("title")
                             .onSnapshot((snapshot) => {
-                                const contents = snapshot.docs.map((doc) => {
+                                const contents = snapshot.docs.map((doc, id) => {
                                     return doc.id &&
                                         doc.data()
                                 });
@@ -35,49 +36,61 @@ export default function MainScreen({ navigation, route }: { navigation: any, rou
             })
     }, [])
 
+    type card = {
+        contents: any,
+        navigation: any,
+        key: any
+    }
+
     return (
-        // <View style={styles.container}>
+        <View style={styles.container} >
 
-        <ScrollView ref={ref} style={styles.container}  >
+            <ScrollView
+                ref={ref}
+            // numColumns={2}
+            >
 
-            {contents.length !== 0 &&
-                contents.map((contents) => {
-                    return (
-                        // <TouchableOpacity
-                        <TouchableOpacity style={styles.container}
-                            onPress={() => navigation.navigate('DScreen')}>
-                            <Card
-                                contents={contents}
-                                key={`${contents.name} `}
-                            />
-                        </TouchableOpacity>
-                    )
-                })}
-            <Button
-                onPress={() => navigation.navigate('AScreen')}
-                title="Open Modal　AA"
-            />
-            <Button
-                onPress={() => navigation.navigate('DScreen')}
-                title="Open Modal　DD"
-            />
-        </ScrollView>
-        //* </View> */ 
+                {contents.length !== 0 &&
+                    contents.map((contents, id) => {
+
+                        return (
+                            <TouchableOpacity
+                                onPress={() => navigation.navigate('DScreen')}
+                            >
+                                <Card
+                                    contents={contents}
+                                    key={id}
+                                // numColumns={2}
+                                />
+                            </TouchableOpacity>
+                        )
+                    })}
+                <Button
+                    onPress={() => navigation.navigate('AScreen')}
+                    title="Open Modal　AA"
+                />
+                <Button
+                    onPress={() => navigation.navigate('DScreen')}
+                    title="Open Modal　DD"
+                />
+            </ScrollView>
+        </View>
     );
 }
 
 const { width } = Dimensions.get("window");
 const CONTAINER_WIDTH = width / 2;
 
+// const useStyles = makeStyles({
+
 const styles = StyleSheet.create({
-    button: {
-        flexBasis: '10%',
-        color: "black",
-        justifyContent: 'center',
-    },
     container: {
-        width: CONTAINER_WIDTH,
-        padding: 8,
+        width: width,
+        // padding: 8,
+        display: 'flex',
+        flex: 1,
+        flexDirection: 'row',
+        // flexWrap: 'wrap',//スクロールが無効になってしまう
     },
     display: {
         flexDirection: 'row',

@@ -4,7 +4,7 @@ import * as React from 'react';
 // import { StyleSheet, Text, View } from 'react-native';
 // import { StatusBar } from 'expo-status-bar';
 import { AppNavigator } from "./src/navigations/AppNavigator";
-import { MainNavigator } from "./src/navigations/MainNavigator";
+// import { MainNavigator } from "./src/navigations/MainNavigator";
 // import { HomeNavigator } from "./src/navigations/HomeNavigator";
 
 export default function App() {

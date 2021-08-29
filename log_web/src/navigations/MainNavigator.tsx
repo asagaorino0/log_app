@@ -11,22 +11,22 @@ import DScreen from '../screens/DScreen';
 const Stack = createStackNavigator();
 const RootStack = createStackNavigator();
 
-const MainStack = () => (
-    <Stack.Navigator    >
-        <Stack.Screen
-            name="Main"
-            component={MainScreen}
-            options={{ headerShown: false }}
-        />
-    </Stack.Navigator>
-);
+// const MainStack = () => (
+//     <Stack.Navigator    >
+//         <Stack.Screen
+//             name="Main"
+//             component={MainScreen}
+//             options={{ headerShown: false }}
+//         />
+//     </Stack.Navigator>
+// );
 
 export const MainNavigator = () => (
     <RootStack.Navigator>
         <RootStack.Group>
             <RootStack.Screen
                 name="Main"
-                component={MainStack}
+                component={MainScreen}
                 options={{ headerShown: false }}
             />
             <RootStack.Screen name="DScreen" component={DScreen} />
@@ -36,5 +36,19 @@ export const MainNavigator = () => (
         </RootStack.Group>
     </RootStack.Navigator>
 );
-
+// export const MainNavigator = () => (
+//     <Stack.Navigator>
+//         <Stack.Group>
+//             <Stack.Screen
+//                 name="Main"
+//                 component={MainScreen}
+//                 options={{ headerShown: false }}
+//             />
+//             <Stack.Screen name="DScreen" component={DScreen} />
+//         </Stack.Group>
+//         <Stack.Group screenOptions={{ presentation: 'modal' }}>
+//             <Stack.Screen name="AScreen" component={AScreen} />
+//         </Stack.Group>
+//     </Stack.Navigator>
+// );
 

@@ -5,7 +5,7 @@ import { FontAwesome } from '@expo/vector-icons';
 import { StackNavigationProp } from "@react-navigation/stack";
 
 const { width } = Dimensions.get("window");
-const CONTAINER_WIDTH = width / 2;
+const CONTAINER_WIDTH = width / 2 * 0.9;
 const PADDING = 16;
 const IMAGE_WIDTH = CONTAINER_WIDTH - PADDING * 2;
 const styles = StyleSheet.create({
@@ -15,19 +15,32 @@ const styles = StyleSheet.create({
     },
     container: {
         width: width / 2 * 0.9,
-        padding: 6,
+        padding: 5,
+        backgroundColor: 'red',
     },
 })
 
-type RootStackParamList = {
-    Home: undefined;
-    AScreen: { userId: string };
-    Feed: { sort: 'latest' | 'top' } | undefined;
-};
+// type RootStackParamList = {
+//     Home: undefined;
+//     AScreen: { userId: string };
+//     Feed: { sort: 'latest' | 'top' } | undefined;
+// };
 
-type Props = StackNavigationProp<RootStackParamList, 'AScreen'>;
+// type Props = StackNavigationProp<RootStackParamList, 'AScreen'>;
 
-export default function SimpleCard({ contents, navigation }: { contents, navigation: any }
+type card = {
+    contents: [],
+    navigation: any,
+    key: any
+    src: string
+    title: string
+    name: string
+    star: number
+    id: string
+
+}
+
+export default function SimpleCard({ contents }: { contents: card }
 ) {
     return (
         <Card style={styles.container} >

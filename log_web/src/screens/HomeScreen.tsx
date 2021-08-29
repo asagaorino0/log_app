@@ -1,8 +1,6 @@
 import * as React from 'react';
 import { Button, Text, View } from "react-native";
 export default function HomeScreen({ navigation }: { navigation: any }) {
-
-
     return (
         <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
             <Text>Home Screen</Text>
@@ -14,7 +12,6 @@ export default function HomeScreen({ navigation }: { navigation: any }) {
                 title="log in"
                 onPress={() => navigation.navigate('Main')}
             />
-
         </View>
 
     )

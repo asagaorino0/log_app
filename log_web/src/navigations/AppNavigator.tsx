@@ -4,24 +4,18 @@ import * as React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
-import MainScreen from '../screens/MainScreen'
 import UploadScreen from '../screens/UploadScreen';
-// import ThirdScreen from '../screens/ThirdScreen';
 import { FontAwesome } from '@expo/vector-icons';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import SubScreen from '../screens/SubScreen'
 import HomeScreen from '../screens/HomeScreen';
-// import Card from '../components/Card';
-// import MsgList from '../components/MsgList';
-// import A from '../screens/A';
 import { MainNavigator } from "./MainNavigator";
-import { MsgListNavigator } from "./MsgListNavigator";
+
 
 const Stack = createStackNavigator();
 const Tab = createMaterialBottomTabNavigator();
 export const AppNavigator = () => {
     return (
-
         <NavigationContainer>
             <Tab.Navigator>
                 <Tab.Screen name="Home" component={HomeScreen}
@@ -55,6 +49,5 @@ export const AppNavigator = () => {
                 {/* </Stack.Navigator> */}
             </Tab.Navigator>
         </NavigationContainer>
-
     );
 };

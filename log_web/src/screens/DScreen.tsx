@@ -6,7 +6,8 @@ import "firebase/firestore";
 export default function DScreen({ navigation, route }: { navigation: any, route: any }) {
 
     return (
-        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+        <View style={styles.container}>
+            {/* <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}> */}
             <Text style={{ fontSize: 30 }}>This is a D!</Text>
             <Button onPress={() => navigation.goBack()} title="Mainへ" />
         </View>
@@ -22,6 +23,7 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         justifyContent: 'center',
+        alignItems: 'center',
     },
     display: {
         flexDirection: 'row',
