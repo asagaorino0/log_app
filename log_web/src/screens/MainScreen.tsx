@@ -1,8 +1,11 @@
 import * as React from 'react';
-import { View, ScrollView, Text, StyleSheet, Button, TouchableOpacity, Dimensions } from 'react-native';
+import { SafeAreaView, View, FlatList, Text, StyleSheet, Image, Button, TouchableOpacity, Dimensions, Alert } from 'react-native';
 import firebase from "../lib/firebase";
 import firestore from "../lib/firebase";
 import Card from '../components/Card'
+import { Divider } from 'react-native-elements';
+// import { Card, Title, Paragraph } from 'react-native-paper';
+import { FontAwesome } from '@expo/vector-icons';
 // import { makeStyles } from '@material-ui/core/styles';
 
 export default function MainScreen({ navigation, route }: { navigation: any, route: any }) {
@@ -11,7 +14,7 @@ export default function MainScreen({ navigation, route }: { navigation: any, rou
     // const [name, setName] = React.useState('');
     // const [user, setUser] = React.useState('');
     // const [age, setAge] = React.useState('');
-    const [contents, setContents] = React.useState([]);
+    const [contents, setContents] = React.useState<[]>([]);
     React.useEffect(() => {
         firebase.auth().signInAnonymously()
             .then(() => {
@@ -36,45 +39,74 @@ export default function MainScreen({ navigation, route }: { navigation: any, rou
             })
     }, [])
 
-    type card = {
-        contents: any,
+    interface card {
+        contents: [],
         navigation: any,
         key: any
+        src: string
+        title: string
+        name: string
+        star: number
+        id: string
     }
 
+    const renderPerson = ({ contents }: { contents: card }) => {
+        // const renderPerson = () => {
+        console.log(contents)
+        // return (
+        //     <Card style={styles.container} >
+        //         <Card.Content>
+        //             <Title>{contents.title}</Title>
+        //             <Image
+        //                 source={{ uri: `${contents.src}` }}
+        //                 style={styles.image}
+        //             />
+        //             <FontAwesome name="star" size={24} />
+        //             <FontAwesome name="star-o" size={24} />
+        //             <Paragraph>{contents.name}</Paragraph>
+        //         </Card.Content>
+        //     </Card >
+        // )
+        return (
+            <View style={styles.container}>
+                <View>
+                    <Text>{contents.name}</Text>
+                </View>
+                <Divider />
+            </View>
+        )
+
+    }
+
+
     return (
-        <View style={styles.container} >
+        <SafeAreaView style={styles.container} >
 
-            <ScrollView
-                ref={ref}
-            // numColumns={2}
-            >
+            <FlatList
+                data={contents}
+                renderItem={({ item }: { item: card }) => (
+                    <TouchableOpacity
+                        onPress={() => navigation.navigate('DScreen')}
+                    >
+                        <Card
+                            contents={item}
+                        />
+                    </TouchableOpacity>
+                )}
+                keyExtractor={(item, index) => index.toString()}
+                numColumns={2}
+            />
+            {/* <Button
+                onPress={() => navigation.navigate('AScreen')}
+                title="Open Modal　AA"
+            /> */}
+            <Button
+                onPress={() => navigation.navigate('DScreen')}
+                title="Open D"
+            />
+        </SafeAreaView >
 
-                {contents.length !== 0 &&
-                    contents.map((contents, id) => {
 
-                        return (
-                            <TouchableOpacity
-                                onPress={() => navigation.navigate('DScreen')}
-                            >
-                                <Card
-                                    contents={contents}
-                                    key={id}
-                                // numColumns={2}
-                                />
-                            </TouchableOpacity>
-                        )
-                    })}
-                <Button
-                    onPress={() => navigation.navigate('AScreen')}
-                    title="Open Modal　AA"
-                />
-                <Button
-                    onPress={() => navigation.navigate('DScreen')}
-                    title="Open Modal　DD"
-                />
-            </ScrollView>
-        </View>
     );
 }
 
@@ -85,12 +117,10 @@ const CONTAINER_WIDTH = width / 2;
 
 const styles = StyleSheet.create({
     container: {
-        width: width,
-        // padding: 8,
-        display: 'flex',
         flex: 1,
-        flexDirection: 'row',
-        // flexWrap: 'wrap',//スクロールが無効になってしまう
+        alignItems: "center",
+        justifyContent: "center",
+        backgroundColor: "#fff",
     },
     display: {
         flexDirection: 'row',

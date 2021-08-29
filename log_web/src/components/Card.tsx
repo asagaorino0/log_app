@@ -5,18 +5,19 @@ import { FontAwesome } from '@expo/vector-icons';
 import { StackNavigationProp } from "@react-navigation/stack";
 
 const { width } = Dimensions.get("window");
-const CONTAINER_WIDTH = width / 2 * 0.9;
+const CONTAINER_WIDTH = width / 2;
 const PADDING = 16;
 const IMAGE_WIDTH = CONTAINER_WIDTH - PADDING * 2;
 const styles = StyleSheet.create({
     image: {
-        width: IMAGE_WIDTH * 0.9,
+        width: IMAGE_WIDTH,
         height: IMAGE_WIDTH * 0.7,
     },
     container: {
-        width: width / 2 * 0.9,
-        padding: 5,
-        backgroundColor: 'red',
+        width: width / 2,
+        backgroundColor: "#fff",
+        // padding: 6,
+        // backgroundColor: 'red',
     },
 })
 
@@ -37,7 +38,6 @@ type card = {
     name: string
     star: number
     id: string
-
 }
 
 export default function SimpleCard({ contents }: { contents: card }
