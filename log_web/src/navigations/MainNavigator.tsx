@@ -5,7 +5,6 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
 import MainScreen from '../screens/MainScreen'
-import AScreen from '../screens/AScreen';
 import DetailScreen from '../screens/DetailScreen';
 
 const Stack = createStackNavigator();
@@ -31,9 +30,9 @@ export const MainNavigator = () => (
             />
             <RootStack.Screen name="DetailScreen" component={DetailScreen} />
         </RootStack.Group>
-        <RootStack.Group screenOptions={{ presentation: 'modal' }}>
-            <RootStack.Screen name="AScreen" component={AScreen} />
-        </RootStack.Group>
+        {/* <RootStack.Group screenOptions={{ presentation: 'modal' }}>
+            <RootStack.Screen name="DetailScreen" component={DetailScreen} />
+        </RootStack.Group> */}
     </RootStack.Navigator>
 );
 // export const MainNavigator = () => (
