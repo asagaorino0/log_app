@@ -57,7 +57,7 @@ export default function MainScreen({ navigation, route }: { navigation: any, rou
                 data={contents}
                 renderItem={({ item }: { item: card }) => (
                     <TouchableOpacity
-                        onPress={() => navigation.navigate('DScreen')}
+                        onPress={() => navigation.navigate('DetailScreen')}
                     >
                         <Card
                             contents={item}
@@ -72,7 +72,7 @@ export default function MainScreen({ navigation, route }: { navigation: any, rou
                 title="Open Modal　AA"
             /> */}
             <Button
-                onPress={() => navigation.navigate('DScreen')}
+                onPress={() => navigation.navigate('DetailScreen')}
                 title="Open D"
             />
         </SafeAreaView >
