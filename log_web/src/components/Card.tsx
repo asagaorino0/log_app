@@ -3,19 +3,10 @@ import { StyleSheet, Image, Dimensions, TouchableOpacity } from 'react-native';
 import { Card, Title, Paragraph, Text, Button } from 'react-native-paper';
 import { FontAwesome } from '@expo/vector-icons';
 import { StackNavigationProp } from "@react-navigation/stack";
+import { Detail } from '../types/detail'
 
-type card = {
-    // contents: [],
-    navigation: any,
-    key: any
-    src: string
-    title: string
-    name: string
-    star: number
-    id: string
-}
 
-export default function SimpleCard({ contents }: { contents: card }
+export default function SimpleCard({ contents }: { contents: Detail }
 ) {
     return (
         <Card style={styles.container} >

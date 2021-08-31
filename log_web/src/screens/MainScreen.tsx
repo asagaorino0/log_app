@@ -3,9 +3,7 @@ import { SafeAreaView, View, FlatList, Text, StyleSheet, Image, Button, Touchabl
 import firebase from "../lib/firebase";
 import firestore from "../lib/firebase";
 import Card from '../components/Card'
-// import { Divider } from 'react-native-elements';
-// import { Card, Title, Paragraph } from 'react-native-paper';
-// import { FontAwesome } from '@expo/vector-icons';
+import { Detail } from '../types/detail'
 // import { makeStyles } from '@material-ui/core/styles';
 
 export default function MainScreen({ navigation, route }: { navigation: any, route: any }) {
@@ -39,25 +37,14 @@ export default function MainScreen({ navigation, route }: { navigation: any, rou
             })
     }, [])
 
-    interface card {
-        // contents: [],
-        navigation: any,
-        key: any
-        src: string
-        title: string
-        name: string
-        star: number
-        id: string
-    }
-
     return (
         <SafeAreaView style={styles.container} >
 
             <FlatList
                 data={contents}
-                renderItem={({ item }: { item: card }) => (
+                renderItem={({ item }: { item: Detail }) => (
                     <TouchableOpacity
-                        onPress={() => navigation.navigate('DetailScreen')}
+                        onPress={() => navigation.navigate('Detail')}
                     >
                         <Card
                             contents={item}
@@ -72,7 +59,7 @@ export default function MainScreen({ navigation, route }: { navigation: any, rou
                 title="Open Modal　AA"
             /> */}
             <Button
-                onPress={() => navigation.navigate('DetailScreen')}
+                onPress={() => navigation.navigate('Detail')}
                 title="Open D"
             />
         </SafeAreaView >

@@ -3,7 +3,6 @@ import * as React from 'react';
 import { Button, Text, View } from "react-native";
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
 import MainScreen from '../screens/MainScreen'
 import DetailScreen from '../screens/DetailScreen';
 
@@ -28,7 +27,7 @@ export const MainNavigator = () => (
                 component={MainScreen}
                 options={{ headerShown: false }}
             />
-            <RootStack.Screen name="DetailScreen" component={DetailScreen} />
+            <RootStack.Screen name="Detail" component={DetailScreen} />
         </RootStack.Group>
         {/* <RootStack.Group screenOptions={{ presentation: 'modal' }}>
             <RootStack.Screen name="DetailScreen" component={DetailScreen} />
