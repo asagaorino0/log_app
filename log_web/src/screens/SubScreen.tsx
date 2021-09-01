@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { StyleSheet, Button, View, Text, TextInput, TouchableHighlight, TouchableWithoutFeedback, Keyboard } from 'react-native';
 import firebase from "../lib/firebase";
-import "firebase/firestore";
+import firestore from "../lib/firebase";
 
 export default function SubScreen({ navigation }: { navigation: any }) {
     const [uid, setUid] = React.useState('');
@@ -25,7 +25,7 @@ export default function SubScreen({ navigation }: { navigation: any }) {
                             .then((querySnapshot) => {
                                 querySnapshot.forEach((doc) => {
                                     console.log(doc.id, " => ", doc.data())
-                                    setUser(doc.data())
+                                    // setUser(doc.data())
                                 })
                             })
                     }

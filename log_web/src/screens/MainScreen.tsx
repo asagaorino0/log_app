@@ -1,18 +1,22 @@
 import * as React from 'react';
-import { SafeAreaView, View, FlatList, Text, StyleSheet, Image, Button, TouchableOpacity, Dimensions, Alert } from 'react-native';
+import { SafeAreaView, View, FlatList, TextInput, StyleSheet, Image, Button, TouchableOpacity, Dimensions, Alert } from 'react-native';
 import firebase from "../lib/firebase";
 import firestore from "../lib/firebase";
 import Card from '../components/Card'
+import { StackNavigationProp } from "@react-navigation/stack";
 import { Detail } from '../types/detail'
 // import { makeStyles } from '@material-ui/core/styles';
-
+type RootStackParamList = {
+    Main: undefined;
+    Detail: { contents: Detail };
+};
+type Props = {
+    navigation: StackNavigationProp<RootStackParamList, "Main">;
+};
 export default function MainScreen({ navigation, route }: { navigation: any, route: any }) {
     const [uid, setUid] = React.useState(`${route.params?.uid}`);
     const ref = React.useRef(null);
-    // const [name, setName] = React.useState('');
-    // const [user, setUser] = React.useState('');
-    // const [age, setAge] = React.useState('');
-    const [contents, setContents] = React.useState<[]>([]);
+    const [contents, setContents] = React.useState([]);
     React.useEffect(() => {
         firebase.auth().signInAnonymously()
             .then(() => {
@@ -39,32 +43,40 @@ export default function MainScreen({ navigation, route }: { navigation: any, rou
 
     return (
         <SafeAreaView style={styles.container} >
-
             <FlatList
                 data={contents}
-                renderItem={({ item }: { item: Detail }) => (
-                    <TouchableOpacity
-                        onPress={() => navigation.navigate('Detail')}
-                    >
-                        <Card
-                            contents={item}
-                        />
-                    </TouchableOpacity>
-                )}
+                // key={`${contents.id}`}
+                renderItem={({ item }: { item: Detail }) => {
+
+                    const handleDetail = (item: Detail) => {
+                        // setItem(item)
+                        alert(item)
+                        navigation.navigate({
+                            name: 'Detail',
+                            params: { itemmm: item.title },
+                            merge: true,
+                        });
+                    }
+                    return (
+                        <TouchableOpacity
+                            onPress={() => handleDetail(item)}
+                        >
+                            <Card
+                                contents={item}
+                                key={item.id}
+                            />
+                        </TouchableOpacity>
+
+                    )
+                }}
                 keyExtractor={(item, index) => index.toString()}
                 numColumns={2}
             />
-            {/* <Button
-                onPress={() => navigation.navigate('AScreen')}
-                title="Open Modal　AA"
-            /> */}
             <Button
                 onPress={() => navigation.navigate('Detail')}
                 title="Open D"
             />
         </SafeAreaView >
-
-
     );
 }
 

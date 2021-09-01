@@ -9,7 +9,7 @@ import { FontAwesome } from '@expo/vector-icons';
 import { FormProvider, useForm, useFormContext } from 'react-hook-form'
 import { Input } from 'react-native-elements';
 
-export default function UploadScreen({ navigation, route, props }: { navigation: any, route: any, props: Props }) {
+export default function UploadScreen({ navigation, route, props }: { navigation: any, route: any, props }) {
     //現在ログインしているユーザーを取得する
     const [uid, setUid] = React.useState(`${route.params?.uid}`);
     const [name, setName] = React.useState('');
@@ -116,9 +116,9 @@ export default function UploadScreen({ navigation, route, props }: { navigation:
         };
     };
     const { acceptedFiles } = useDropzone();
-    const files = acceptedFiles.map(file => (
-        <li key={file.name}>{file.path}</li>
-    ));
+    // const files = acceptedFiles.map(file => (
+    //     <li key={file.name}>{file.path}</li>
+    // ));
 
     return (
         <View>
@@ -161,7 +161,7 @@ export default function UploadScreen({ navigation, route, props }: { navigation:
                             </View>
                         )}
                         <Paragraph>
-                            {files}
+                            {/* {files} */}
                         </Paragraph>
                     </div>
                     <Button

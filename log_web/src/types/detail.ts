@@ -1,5 +1,5 @@
 export type Detail = {
-    // contents: [],
+    contents: [],
     navigation: any,
     key: any
     src: string

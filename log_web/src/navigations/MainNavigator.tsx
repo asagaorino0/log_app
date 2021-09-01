@@ -9,15 +9,15 @@ import DetailScreen from '../screens/DetailScreen';
 const Stack = createStackNavigator();
 const RootStack = createStackNavigator();
 
-// const MainStack = () => (
-//     <Stack.Navigator    >
-//         <Stack.Screen
-//             name="Main"
-//             component={MainScreen}
-//             options={{ headerShown: false }}
-//         />
-//     </Stack.Navigator>
-// );
+const MainStack = () => (
+    <Stack.Navigator    >
+        <Stack.Screen
+            name="Main"
+            component={MainStack}
+            options={{ headerShown: false }}
+        />
+    </Stack.Navigator>
+);
 
 export const MainNavigator = () => (
     <RootStack.Navigator>
