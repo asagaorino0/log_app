@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { SafeAreaView, View, FlatList, TextInput, StyleSheet, Image, Button, TouchableOpacity, Dimensions, Alert } from 'react-native';
+import { SafeAreaView, View, FlatList, StyleSheet, Image, Button, TouchableOpacity, Dimensions, Alert } from 'react-native';
 import firebase from "../lib/firebase";
 import firestore from "../lib/firebase";
 import Card from '../components/Card'
@@ -41,19 +41,33 @@ export default function MainScreen({ navigation, route }: { navigation: any, rou
             })
     }, [])
 
+    // const handleDetail = (item: Detail) => {
+    //     // setItem(item)
+    //     alert(item)
+    //     navigation.navigate({
+    //         name: 'Detail',
+    //         params: { itemmm: item.title },
+    //         merge: true,
+    //     });
+    // }
+
     return (
         <SafeAreaView style={styles.container} >
             <FlatList
                 data={contents}
-                // key={`${contents.id}`}
                 renderItem={({ item }: { item: Detail }) => {
-
                     const handleDetail = (item: Detail) => {
                         // setItem(item)
-                        alert(item)
+                        // alert(item)
                         navigation.navigate({
                             name: 'Detail',
-                            params: { itemmm: item.title },
+                            params: {
+                                title: item.title,
+                                name: item.name,
+                                star: item.star,
+                                src: item.src,
+
+                            },
                             merge: true,
                         });
                     }
@@ -72,11 +86,15 @@ export default function MainScreen({ navigation, route }: { navigation: any, rou
                 keyExtractor={(item, index) => index.toString()}
                 numColumns={2}
             />
+
             <Button
                 onPress={() => navigation.navigate('Detail')}
                 title="Open D"
             />
+
         </SafeAreaView >
+
+
     );
 }
 
