@@ -66,7 +66,7 @@ export default function MainScreen({ navigation, route }: { navigation: any, rou
                                 name: item.name,
                                 star: item.star,
                                 src: item.src,
-
+                                url: item.url,
                             },
                             merge: true,
                         });

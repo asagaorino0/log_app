@@ -7,4 +7,6 @@ export type Detail = {
     name: string
     star: number
     id: string
+    url: string
+    dsc: string
 }

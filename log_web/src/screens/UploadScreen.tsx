@@ -52,7 +52,6 @@ export default function UploadScreen({ navigation, route, props }: { navigation:
                 url,
                 timestamp: firebase.firestore.FieldValue.serverTimestamp(),
                 star: 0,
-
             })
                 .then((docref) => {
                     // console.log("Document successfully written!:", docref.id);
