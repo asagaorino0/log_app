@@ -1,7 +1,5 @@
-import * as React from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { View, Text, StyleSheet, Button, Image, TouchableOpacity, Linking } from 'react-native';
-// import firebase from "../lib/firebase";
-// import firestore from "../lib/firebase";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { RouteProp } from "@react-navigation/native";
 import { Detail } from '../types/detail'
@@ -9,16 +7,17 @@ import classname from 'classnames'
 import { AntDesign } from '@expo/vector-icons';
 import Hyperlink from 'react-native-hyperlink'
 // import { makeStyles } from '@material-ui/core/styles';
-
+import { UserContext } from "../context/userContext";
 
 export default function DetailScreen({ navigation, route }) {
+    const { user } = useContext(UserContext)
     const title = route.params?.title;
     const src = route.params?.src;
     const name = route.params?.name;
     const star = route.params?.star;
     const url = route.params?.url;
 
-    React.useEffect(() => {
+    useEffect(() => {
         navigation.setOptions({
             title,
         });
@@ -35,8 +34,6 @@ export default function DetailScreen({ navigation, route }) {
     // const className = require('classnames')
 
     const handleDetail = (item: Detail) => {
-        // setItem(item)
-        // alert(item)
         navigation.navigate({
             name: 'Review',
             params: {
@@ -66,7 +63,7 @@ export default function DetailScreen({ navigation, route }) {
             <TouchableOpacity
                 onPress={() => handleDetail(route.params)}
             >
-                <AntDesign name="pluscircle" size={30} color="tomato" />
+                <AntDesign name="pluscircle" size={36} color="red" />
             </TouchableOpacity>
         </View>
     );

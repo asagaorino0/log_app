@@ -1,195 +1,177 @@
-import * as React from 'react';
-import { Button, Text, View, StyleSheet, TextInput } from "react-native";
+import React, { useState, useContext, useEffect } from 'react';
+import { SafeAreaView, View, Text, TextInput, StyleSheet, Image, TouchableWithoutFeedback, Keyboard, Button } from 'react-native';
 import firebase from "../lib/firebase";
-import firestore from "../lib/firebase";
-import { useDropzone } from "react-dropzone";
-import { storage } from "../lib/firebase";
-import { Card, Title, Paragraph } from 'react-native-paper';
-import { FontAwesome } from '@expo/vector-icons';
-import { FormProvider, useForm, useFormContext } from 'react-hook-form'
-import { Input } from 'react-native-elements';
+import * as ImagePicker from 'expo-image-picker';
+import { StackNavigationProp } from "@react-navigation/stack";
+import { RouteProp } from "@react-navigation/native";
+import { Detail } from '../types/detail'
+import ButtonIcon from '../components/ButtonIcon'
+// import ButtonText from '../components/Button'
+import classname from 'classnames'
+import { UserContext } from "../context/userContext";
 
-export default function UploadScreen({ navigation, route, props }: { navigation: any, route: any, props }) {
-    //現在ログインしているユーザーを取得する
-    const [uid, setUid] = React.useState(`${route.params?.uid}`);
-    const [name, setName] = React.useState('');
-    const [user, setUser] = React.useState('');
-    const [url, setUrl] = React.useState('');
-    const [title, setTitle] = React.useState("");
-    const [dsc, setDsc] = React.useState("");
+export default function UploadScreen({ navigation, route }) {
+    const { user } = useContext(UserContext)
+    const item = route.params;
+    const src = route.params?.src;
+    // const name = user?.name;
+    const star = route.params?.star;
+    const [reviewText, setReviewText] = useState('');
+    const [image, setImage] = useState<string>(null);
+    const [title, setTitle] = useState('');
+    // const [user, setUser] = useState(user);
+    const [name, setName] = useState<string>(user.name);
+    const [url, setUrl] = useState('');
+    const [dsc, setDsc] = useState("");
     const db = firebase.firestore()
-    React.useEffect(() => {
-        firebase.auth().signInAnonymously()
-            .then(() => {
-                firebase.auth().onAuthStateChanged((user) => {
-                    if (user) {
-                        var uid = user.uid;
-                        setUid(uid)
-                        firebase
-                            .firestore()
-                            .collection("users")
-                            .where("id", "==", `${user.uid}`)
-                            .get()
-                            .then((querySnapshot) => {
-                                querySnapshot.forEach((doc) => {
-                                    console.log(doc.id, " => ", doc.data())
-                                    setName(doc.data().name)
-                                })
-                            })
-                    }
-                })
-            })
-    }, [])
-
-    const handleCreate = async () => {
-        // if (e.key === 'Enter') {
-        await
-            db.collection('review').add({
-                name: `${name}`,
-                title,
-                src: `${src}`,
-                dsc,
-                url,
-                timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-                star: 0,
-            })
-                .then((docref) => {
-                    // console.log("Document successfully written!:", docref.id);
-                    setTitle("");
-                    setSrc("");
-                    setDsc("");
-                    setUrl("");
-                    setMyFiles([]);
-                    setClickable(false);
-                    db.collection('review').doc(docref.id).set({
-                        id: docref.id,
-                    }, { merge: true }//←上書きされないおまじない
-                    )
-                })
-                .catch((error) => {
-                    console.error("Error writing document: ", error);
-                })
-    }
-    // }
-    const [myFiles, setMyFiles] = React.useState<File[]>([]);
-    const [clickable, setClickable] = React.useState(false);
-    const [src, setSrc] = React.useState("");
-    const onDrop = React.useCallback(async (acceptedFiles: File[]) => {
-        if (!acceptedFiles[0]) return;
-        try {
-            setMyFiles([...acceptedFiles]);
-            setClickable(true);
-            handlePreview(acceptedFiles);
-        } catch (error) {
-            alert(error);
-
+    const [loading, setLoading] = useState<boolean>(false);
+    // useEffect(() => {
+    //     console.log(user.name)
+    //     // navigation.setOptions({
+    //     // title: user.name,
+    //     // headerLeft: () => (
+    //     // <Button onPress={() => navigation.goBack()} title="✕" />
+    //     // ),
+    //     // });
+    // }, []);
+    type RootStackParamList = {
+        Main: undefined;
+        Detail: { item: Detail };
+    };
+    type Props = {
+        navigation: StackNavigationProp<RootStackParamList, "Detail">;
+        route: RouteProp<RootStackParamList, "Detail">;
+        ButtonIcon: any
+    };
+    const pickImage = async () => {
+        let result = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.All,
+            allowsEditing: true,
+            aspect: [4, 3],
+            quality: 1,
+        });
+        if (!result.cancelled) {
+            setImage(result.uri);
         }
-    }, []);
-    const { getRootProps, getInputProps } = useDropzone({
-        onDrop,
-    });
-    const handleUpload = async (accepterdImg: any) => {
+    };
+    const handleCreate = async () => {
+        await
+            handleUpload()
+        db.collection('contents').add({
+            name: `${user.name}`,
+            title,
+            src: `${image}`,
+            dsc,
+            url,
+            userId: `${user.userId}`,
+            timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+            star: 0,
+        })
+            .then((docref) => {
+                db.collection('contents').doc(docref.id).set({
+                    id: docref.id,
+                }, { merge: true }//←上書きされないおまじない
+                )
+            })
+            .catch((error) => {
+                console.error("Error writing document: ", error);
+            })
+    }
+    const uploadImage = async (uri: string, path: string) => {
+        const localUri = await fetch(uri);
+        const blob = await localUri.blob();
+        const ref = firebase.storage().ref().child(path);
+        let downloadUrl = "";
         try {
-            // アップロード処理
-            const uploadTask: any = storage
-                .ref(`/images/${myFiles[0].name}`)
-                .put(myFiles[0]);
-            // uploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED, next, error);
-            uploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED);
+            await ref.put(blob);
+            downloadUrl = await ref.getDownloadURL();
+        } catch (err) {
+            console.log(err);
+        }
+        return downloadUrl;
+    };
+    const handleUpload = async () => {
+        setLoading(true);
+        try {
+            const storagePath = `/images/${image}`;
+            const downloadUrl = await uploadImage(image, storagePath);
+            setImage("")
         }
         catch (error) {
         }
+        setLoading(false);
+        navigation.goBack();
     };
-    const handlePreview = (files: any) => {
-        if (files === null) {
-            return;
-        }
-        const file = files[0];
-        if (file === null) {
-            return;
-        }
-        var reader = new FileReader();
-        reader.readAsDataURL(file);
-        reader.onload = () => {
-            setSrc(reader.result as string);
-        };
-    };
-    const { acceptedFiles } = useDropzone();
-    // const files = acceptedFiles.map(file => (
-    //     <li key={file.name}>{file.path}</li>
-    // ));
-
     return (
-        <View>
-            <Text>title</Text>
-            <TextInput
-                style={styles.inputtt}
-                value={title}
-                onChangeText={setTitle}
-            />
-            <Text>概要</Text>
-            <TextInput
-                style={styles.inputtt}
-                value={dsc}
-                onChangeText={setDsc}
-            />
-            <Text>url</Text>
-            <TextInput
-                style={styles.inputtt}
-                value={url}
-                onChangeText={setUrl}
-            />
-            <Card>
-                <Card.Content>
-                    <Paragraph>ファイルを添付</Paragraph>
-                    <div {...getRootProps({ className: 'dropzone' })}>
-                        <form >
-                            <input
-                                {...getInputProps()}
-                            />
-                        </form>
-                        {myFiles.length === 0 ? (
-                            <FontAwesome name="folder" size={24} />
-                        ) : (
-                            <View style={{ width: '180px', height: '180px' }}>
-                                {myFiles.map((file: File) => (
-                                    <React.Fragment key={file.name}>
-                                        {src && <img src={src} />}
-                                    </React.Fragment>
-                                ))}
-                            </View>
-                        )}
-                        <Paragraph>
-                            {/* {files} */}
-                        </Paragraph>
-                    </div>
-                    <Button
-                        title="upload"
-                        onPress={() => handleUpload(myFiles)}
-                    />
-                </Card.Content>
-            </Card>
-            <FontAwesome name="send" onClick={handleCreate} size={120} />
-        </View>
-    )
+        <SafeAreaView style={styles.container} >
+            {/* <TouchableWithoutFeedback
+                onPress={() => {
+                    Keyboard.dismiss()
+                }}> */}
+            <View style={styles.container}>
+                <Text style={{ margin: 10 }}>name:{user.name}</Text>
+                <Text style={{ fontSize: 30 }}>新規投稿</Text>
+                <TextInput
+                    placeholder="Title?"
+                    style={{ height: 30, padding: 10, backgroundColor: 'white' }}
+                    value={title}
+                    onChangeText={setTitle}
+                    multiline={true}
+                />
+                <TextInput
+                    placeholder="What's your Review?"
+                    style={{ height: 30, padding: 10, backgroundColor: 'white' }}
+                    value={reviewText}
+                    onChangeText={setReviewText}
+                    multiline={true}
+                />
+                <TextInput
+                    placeholder="詳細"
+                    style={{ height: 30, padding: 10, backgroundColor: 'white' }}
+                    value={dsc}
+                    onChangeText={setDsc}
+                />
+                <TextInput
+                    placeholder="　url"
+                    style={styles.input}
+                    value={url}
+                    onChangeText={setUrl}
+                />
+                <ButtonIcon name="camera-retro" onPress={pickImage} color="gray" />
+                {image ? <Image source={{ uri: image }} style={styles.image} /> : null}
+                <Button onPress={() => handleCreate()} title="記事を投稿する" />
+            </View>
+            {/* </TouchableWithoutFeedback> */}
+        </SafeAreaView>
+    );
 }
+
 const styles = StyleSheet.create({
-    titleText: {
-        marginTop: 5,
-        marginBottom: 30,
-        borderRadius: 4,
-        justifyContent: "center",
-        alignItems: "center",
-        fontSize: 20,
-        fontWeight: "bold",
+    image: {
+        width: 200,
+        height: 150,
+        resizeMode: "cover",
     },
     button: {
-        alignItems: "center",
-        padding: 10
+        flexBasis: '100%',
+        color: 'white',
+        backgroundColor: "black",
+        justifyContent: 'center',
     },
-    inputtt: {
-        height: 20,
-        borderColor: 'gray',
-        borderWidth: 1
+    container: {
+        width: "100%",
+        height: 250,
+        resizeMode: "cover",
+    },
+    heading: {
+        fontSize: 24,
+        color: 'rgba(14, 13, 13, .38)',
+    },
+    input: {
+        height: 50,
+        borderColor: "#999",
+        borderBottomWidth: 1,
+        backgroundColor: 'white',
+        // marginTop: 10,
     },
 });

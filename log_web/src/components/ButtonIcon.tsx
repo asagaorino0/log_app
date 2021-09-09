@@ -8,12 +8,6 @@ import {
 import { FontAwesome } from "@expo/vector-icons";
 
 type Props = {
-    //     onPress: (event: GestureResponderEvent) => void;
-    //     name?: string;
-    //     color?: string;
-    // };
-    // interface ButtonProps {
-    // title: string;
     onPress: (ev: NativeSyntheticEvent<NativeTouchEvent>) => void;
     color?: string;
     accessibilityLabel?: string;
@@ -30,7 +24,7 @@ export default function ButtonIcon({
     return (
         <TouchableOpacity onPress={onPress} style={styles.container}>
             {/* <FontAwesome name="star" size={24} /> */}
-            <FontAwesome name={name} color={color} size={32} />
+            <FontAwesome name={name} color={color} size={34} />
         </TouchableOpacity>
     );
 };

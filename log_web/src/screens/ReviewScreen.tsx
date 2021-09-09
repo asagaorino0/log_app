@@ -1,5 +1,5 @@
-import * as React from 'react';
-import { View, Text, TextInput, StyleSheet, Button, Image, TouchableWithoutFeedback, Keyboard, Platform } from 'react-native';
+import React, { useContext, useState, useEffect } from 'react';
+import { View, Text, TextInput, StyleSheet, Image, TouchableWithoutFeedback, Keyboard, Button } from 'react-native';
 import firebase from "../lib/firebase";
 import firestore from "../lib/firebase";
 import { storage } from "../lib/firebase";
@@ -8,33 +8,36 @@ import { StackNavigationProp } from "@react-navigation/stack";
 import { RouteProp } from "@react-navigation/native";
 import { Detail } from '../types/detail'
 import ButtonIcon from '../components/ButtonIcon'
+import ButtonText from '../components/Button'
 import classname from 'classnames'
+import { UserContext, user } from "../context/userContext";
 
 export default function ReviewScreen({ navigation, route }) {
+    const { user, setUser } = useContext(UserContext)
     const item = route.params;
     const title = route.params?.title;
     const src = route.params?.src;
-    const name = route.params?.name;
+    const [name, setName] = useState<string>(user.name);
     const star = route.params?.star;
-    const [reviewText, setReviewText] = React.useState('');
-    const [image, setImage] = React.useState(null);
-    const [uid, setUid] = React.useState(`${route.params?.uid}`);
-    const [user, setUser] = React.useState('');
-    const [url, setUrl] = React.useState('');
-    const [dsc, setDsc] = React.useState("");
+    const [reviewText, setReviewText] = useState('');
+    const [image, setImage] = useState(null);
+    const [uid, setUid] = useState(`${route.params?.uid}`);
+    const [url, setUrl] = useState('');
+    const [dsc, setDsc] = useState("");
     const db = firebase.firestore()
-    const [loading, setLoading] = React.useState<boolean>(false);
-    React.useEffect(() => {
+    const [loading, setLoading] = useState<boolean>(false);
+    useEffect(() => {
         navigation.setOptions({
             title,
             headerLeft: () => (
                 <Button onPress={() => navigation.goBack()} title="✕" />
             ),
         });
-    }, [item]);
+    }, []);
     type RootStackParamList = {
         Main: undefined;
         Detail: { item: Detail };
+
     };
     type Props = {
         navigation: StackNavigationProp<RootStackParamList, "Detail">;
@@ -56,7 +59,8 @@ export default function ReviewScreen({ navigation, route }) {
         await
             handleUpload()
         db.collection('contents').add({
-            name: `${name}`,
+            userId: `${user.userId}`,
+            name: `${user.name}`,
             title,
             src: `${image}`,
             dsc,
@@ -105,16 +109,16 @@ export default function ReviewScreen({ navigation, route }) {
                 Keyboard.dismiss()
             }}>
             <View style={styles.container}>
-                <Text style={{ margin: 10 }}>name: {name}</Text>
+                <Text style={{ margin: 10 }}>name: {user.name}</Text>
                 <Text style={{ fontSize: 30 }}>レビュー</Text>
                 <TextInput
                     placeholder="What's your Review?"
-                    style={{ height: 30, padding: 10, backgroundColor: 'white' }}
+                    style={{ height: 100, padding: 10, backgroundColor: 'white' }}
                     value={reviewText}
                     onChangeText={setReviewText}
                     multiline={true}
                 />
-                <TextInput
+                {/* <TextInput
                     placeholder="詳細"
                     style={{ height: 30, padding: 10, backgroundColor: 'white' }}
                     value={dsc}
@@ -125,10 +129,10 @@ export default function ReviewScreen({ navigation, route }) {
                     style={styles.input}
                     value={url}
                     onChangeText={setUrl}
-                />
+                /> */}
                 <ButtonIcon name="camera-retro" onPress={pickImage} color="gray" />
                 {image ? <Image source={{ uri: image }} style={styles.image} /> : null}
-                <Button onPress={() => handleCreate()} title="レビューを投稿する" />
+                <ButtonText onPress={() => handleCreate()} text="レビューを投稿する" />
             </View>
         </TouchableWithoutFeedback>
     );
@@ -137,15 +141,16 @@ export default function ReviewScreen({ navigation, route }) {
 const styles = StyleSheet.create({
     image: {
         width: 200,
+
         height: 150,
         resizeMode: "cover",
     },
-    button: {
-        flexBasis: '100%',
-        color: 'white',
-        backgroundColor: "black",
-        justifyContent: 'center',
-    },
+    // button: {
+    //     flexBasis: '100%',
+    //     color: 'white',
+    //     backgroundColor: "black",
+    //     justifyContent: 'center',
+    // },
     container: {
         width: "100%",
         height: 250,

@@ -1,42 +1,28 @@
-import * as React from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { StyleSheet, Button, View, Text, TextInput, TouchableHighlight, TouchableWithoutFeedback, Keyboard } from 'react-native';
 import firebase from "../lib/firebase";
-import firestore from "../lib/firebase";
-
+import { loginUser } from "../lib/firebase";
+import { UserContext } from "../context/userContext";
 export default function SubScreen({ navigation }: { navigation: any }) {
-    const [uid, setUid] = React.useState('');
-    const [name, setName] = React.useState("");
-    const [age, setAge] = React.useState('');
-    const [user, setUser] = React.useState('');
+    const [userId, setUserId] = useState('');
+    const [name, setName] = useState('');
     const db = firebase.firestore()
+    const { setUser } = useContext(UserContext);
 
-    React.useEffect(() => {
-        firebase.auth().signInAnonymously()
-            .then(() => {
-                firebase.auth().onAuthStateChanged((user) => {
-                    if (user) {
-                        var uid = user.uid;
-                        setUid(uid)
-                        firebase
-                            .firestore()
-                            .collection("users")
-                            .where("id", "==", `${user.uid}`)
-                            .get()
-                            .then((querySnapshot) => {
-                                querySnapshot.forEach((doc) => {
-                                    console.log(doc.id, " => ", doc.data())
-                                    // setUser(doc.data())
-                                })
-                            })
-                    }
-                })
-            })
-    }, [])
+    useEffect(() => {
+        const fetchUser = async () => {
+            const user = await loginUser();
+            setUser(user);
+            setUserId(user.userId)
+            setName(user.name)
+        };
+        fetchUser();
+    }, []);
 
     const onPress = () => {
-        db.collection('users').doc(`${uid}`).set({
+        db.collection('users').doc(`${userId}`).set({
             name: `${name}`,
-            id: `${uid}`,
+            userId: `${userId}`,
             timestamp: firebase.firestore.FieldValue.serverTimestamp(),
         }, { merge: true }//←上書きされないおまじない
         )
@@ -49,12 +35,12 @@ export default function SubScreen({ navigation }: { navigation: any }) {
             <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
                 <Text>Sub Screen</Text>
                 <Button
-                    title="Go to Home"
-                    onPress={() => navigation.navigate('Home')}
+                    title="Go to Upload"
+                    onPress={() => navigation.navigate('Upload')}
                 />
-                <Text style={{ margin: 10 }}>uid: {uid}</Text>
+                <Text style={{ margin: 10 }}>uid: {userId}</Text>
                 <View>
-                    <Text>name</Text>
+                    <Text>name:{name}</Text>
                     <TextInput
                         style={styles.input}
                         value={name}

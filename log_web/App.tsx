@@ -1,31 +1,17 @@
-import * as React from 'react';
-// import { createStackNavigator } from '@react-navigation/stack';
-// import HomeScreen from './src/screens/HomeScreen';
-// import { StyleSheet, Text, View } from 'react-native';
-// import { StatusBar } from 'expo-status-bar';
+import React, { useState } from 'react';
 import { AppNavigator } from "./src/navigations/AppNavigator";
-// import { MainNavigator } from "./src/navigations/MainNavigator";
-// import { HomeNavigator } from "./src/navigations/HomeNavigator";
+import { UserContext } from "./src/context/userContext";
+import { User } from "./src/types/user";
 
 export default function App() {
-    return <AppNavigator />
-    // return <MainNavigator />
-    // return <HomeNavigator />;
+    const [user, setUser] = useState({} as User);
+
+    return (
+        <UserContext.Provider value={{ user, setUser }}>
+            <AppNavigator />
+        </UserContext.Provider>
+    );
 }
-// const Stack = createStackNavigator();
-// export default function App() {
-//     return (
-//         <HomeScreen />
-        //     );
-        // }
-
-
-        // const App: React.FC = () => {
-        // return 
-        // <AppNavigator />
-
-//     )
-// };
 
 
 

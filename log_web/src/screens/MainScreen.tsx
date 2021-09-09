@@ -1,7 +1,8 @@
-import * as React from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { SafeAreaView, View, FlatList, StyleSheet, Image, Button, TouchableOpacity, Dimensions, Alert } from 'react-native';
 import firebase from "../lib/firebase";
-import firestore from "../lib/firebase";
+import { loginUser } from "../lib/firebase";
+import { UserContext, user } from "../context/userContext";
 import Card from '../components/Card'
 import { StackNavigationProp } from "@react-navigation/stack";
 import { Detail } from '../types/detail'
@@ -14,51 +15,44 @@ type Props = {
     navigation: StackNavigationProp<RootStackParamList, "Main">;
 };
 export default function MainScreen({ navigation, route }: { navigation: any, route: any }) {
-    const [uid, setUid] = React.useState(`${route.params?.uid}`);
+    // const [uid, setUid] = useState(`${route.params?.uid}`);
     const ref = React.useRef(null);
-    const [contents, setContents] = React.useState([]);
-    React.useEffect(() => {
-        firebase.auth().signInAnonymously()
-            .then(() => {
-                firebase.auth().onAuthStateChanged((user) => {
-                    if (user) {
-                        var uid = user.uid;
-                        setUid(uid)
-                        firebase
-                            .firestore()
-                            .collection("contents")
-                            .orderBy("title")
-                            .onSnapshot((snapshot) => {
-                                const contents = snapshot.docs.map((doc, id) => {
-                                    return doc.id &&
-                                        doc.data()
-                                });
-                                setContents(contents);
-                                console.log(contents)
-                            })
-                    }
-                })
+    const [contents, setContents] = useState([]);
+    // const { setContents } = useContext(ConponentContext);
+    const db = firebase.firestore()
+    const { setUser } = useContext(UserContext);
+    const [userId, setUserId] = useState('');
+    const [name, setName] = useState('');
+    useEffect(() => {
+        const fetchUser = async () => {
+            const user = await loginUser();
+            setUser(user as user);
+            setUserId(user.userId)
+            setName(user.name)
+        };
+        fetchUser();
+    }, []);
+
+    useEffect(() => {
+        firebase
+            .firestore()
+            .collection("contents")
+            .orderBy("title")
+            .onSnapshot((snapshot) => {
+                const contents = snapshot.docs.map((doc, id) => {
+                    return doc.id &&
+                        doc.data()
+                });
+                setContents(contents);
+                console.log(contents)
             })
     }, [])
-
-    // const handleDetail = (item: Detail) => {
-    //     // setItem(item)
-    //     alert(item)
-    //     navigation.navigate({
-    //         name: 'Detail',
-    //         params: { itemmm: item.title },
-    //         merge: true,
-    //     });
-    // }
-
     return (
         <SafeAreaView style={styles.container} >
             <FlatList
                 data={contents}
                 renderItem={({ item }: { item: Detail }) => {
                     const handleDetail = (item: Detail) => {
-                        // setItem(item)
-                        // alert(item)
                         navigation.navigate({
                             name: 'Detail',
                             params: {
@@ -80,21 +74,16 @@ export default function MainScreen({ navigation, route }: { navigation: any, rou
                                 key={item.id}
                             />
                         </TouchableOpacity>
-
                     )
                 }}
                 keyExtractor={(item, index) => index.toString()}
                 numColumns={2}
             />
-
             <Button
                 onPress={() => navigation.navigate('Detail')}
                 title="Open D"
             />
-
         </SafeAreaView >
-
-
     );
 }
 

@@ -1,60 +1,69 @@
-import * as React from 'react';
-// import * as functions from "../../../proaca-function/functions/node_modules/firebase-functions";
+import React, { useContext } from 'react';
 import { Button, Text, View } from "react-native";
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import MainScreen from '../screens/MainScreen'
 import DetailScreen from '../screens/DetailScreen';
 import ReviewScreen from '../screens/ReviewScreen';
+import { UserContext } from "../context/userContext";
+import SubScreen from '../screens/SubScreen'
 
 const Stack = createStackNavigator();
 const RootStack = createStackNavigator();
-
-const MainStack = () => (
+const SubStack = () => (
     <Stack.Navigator    >
         <Stack.Screen
-            name="Main"
-            component={MainStack}
+            name="Sub"
+            component={SubScreen}
             options={{ headerShown: false }}
         />
     </Stack.Navigator>
 );
 
-export const MainNavigator = () => (
-    <RootStack.Navigator>
-        <RootStack.Group>
-            <RootStack.Screen
-                name="Main"
-                component={MainScreen}
-                options={{ headerShown: false }}
-            />
-            <RootStack.Screen
-                name="Detail"
-                component={DetailScreen}
-            // options={{ headerShown: false }}
-            />
-        </RootStack.Group>
-        <RootStack.Group screenOptions={{ presentation: 'modal' }}>
-            <RootStack.Screen
-                name="Review"
-                component={ReviewScreen}
-            />
-        </RootStack.Group>
-    </RootStack.Navigator>
-);
-// export const MainNavigator = () => (
-//     <Stack.Navigator>
-//         <Stack.Group>
-//             <Stack.Screen
-//                 name="Main"
-//                 component={MainScreen}
-//                 options={{ headerShown: false }}
-//             />
-//             <Stack.Screen name="DetailScreen" component={DetailScreen} />
-//         </Stack.Group>
-//         <Stack.Group screenOptions={{ presentation: 'modal' }}>
-//             <Stack.Screen name="AScreen" component={AScreen} />
-//         </Stack.Group>
-//     </Stack.Navigator>
-// );
+export const MainNavigator = () => {
+    // const { user } = useContext(UserContext);
+    return (
+        //         // <NavigationContainer>
+        //             {!user ? <SubStack /> : 
+        <RootStackNavigator />
+        // }
+        //         // </NavigationContainer>
+    );
+};
+// export const MainNavigator = () => {
+//     const { user } = useContext(UserContext);
+const RootStackNavigator = () => {
+    return (
+        //         <NavigationContainer>
+        //             {!user ? <SubScreen /> :
+        <RootStack.Navigator>
 
+            <RootStack.Group>
+
+                <RootStack.Screen
+                    name="Main"
+                    component={MainScreen}
+                    options={{ headerShown: false }}
+                />
+                <RootStack.Screen
+                    name="Detail"
+                    component={DetailScreen}
+                // options={{ headerShown: false }}
+                />
+                <RootStack.Screen
+                    name="Sub"
+                    component={SubScreen}
+                // options={{ headerShown: false }}
+                />
+            </RootStack.Group>
+            <RootStack.Group screenOptions={{ presentation: 'modal' }}>
+                <RootStack.Screen
+                    name="Review"
+                    component={ReviewScreen}
+                />
+            </RootStack.Group>
+        </RootStack.Navigator>
+        // }
+        //         </NavigationContainer>
+    )
+}
