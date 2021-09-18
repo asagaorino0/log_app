@@ -1,6 +1,8 @@
 import React, { useContext, useState, useEffect } from 'react';
-import { View, Text, TextInput, StyleSheet, Image, TouchableWithoutFeedback, Keyboard, Button } from 'react-native';
+import { View, Text, TextInput, StyleSheet, Image, TouchableWithoutFeedback, Keyboard, Button, ActivityIndicator } from 'react-native';
 import firebase from "../lib/firebase";
+import { loginUser } from "../lib/firebase";
+import { getReviews } from "../lib/firebase";
 import firestore from "../lib/firebase";
 import { storage } from "../lib/firebase";
 import * as ImagePicker from 'expo-image-picker';
@@ -9,79 +11,116 @@ import { RouteProp } from "@react-navigation/native";
 import { Detail } from '../types/detail'
 import ButtonIcon from '../components/ButtonIcon'
 import ButtonText from '../components/Button'
+import { Loading } from '../components/Loading'
 import classname from 'classnames'
-import { UserContext, user } from "../context/userContext";
-
+import { UserContext } from "../context/userContext";
+import { ReviewsContext } from "../context/reviewsContext";
+import { Review } from "../types/review";
+import moment from "moment";
 export default function ReviewScreen({ navigation, route }) {
-    const { user, setUser } = useContext(UserContext)
+    const { setUser, user } = useContext(UserContext)
+    const { setReviews, reviews } = useContext(ReviewsContext)
     const item = route.params;
     const title = route.params?.title;
-    const src = route.params?.src;
-    const [name, setName] = useState<string>(user.name);
+    const id = route.params?.id;
     const star = route.params?.star;
     const [reviewText, setReviewText] = useState('');
-    const [image, setImage] = useState(null);
-    const [uid, setUid] = useState(`${route.params?.uid}`);
+    const [storagePath, setStoragePath] = useState("");
+    const [uri, setUri] = useState('');
+    const [src, setSrc] = useState('');
     const [url, setUrl] = useState('');
     const [dsc, setDsc] = useState("");
+    const [itemId, setItemId] = useState('');
     const db = firebase.firestore()
     const [loading, setLoading] = useState<boolean>(false);
+    const daytime = moment().format("YYYYMMDDhhmmss");
+
     useEffect(() => {
         navigation.setOptions({
             title,
             headerLeft: () => (
                 <Button onPress={() => navigation.goBack()} title="✕" />
             ),
-        });
+        })
+        const fetchUser = async () => {
+            const user = await loginUser();
+            setUser(user)
+        };
+        fetchUser();
     }, []);
     type RootStackParamList = {
         Main: undefined;
         Detail: { item: Detail };
-
     };
     type Props = {
         navigation: StackNavigationProp<RootStackParamList, "Detail">;
         route: RouteProp<RootStackParamList, "Detail">;
         ButtonIcon: any
     };
-    const pickImage = async () => {
-        let result = await ImagePicker.launchImageLibraryAsync({
-            mediaTypes: ImagePicker.MediaTypeOptions.All,
-            allowsEditing: true,
-            aspect: [4, 3],
-            quality: 1,
-        });
-        if (!result.cancelled) {
-            setImage(result.uri);
-        }
+    const getExtention = (path: string) => {
+        return path.split(".").pop();
     };
+
     const handleCreate = async () => {
-        await
-            handleUpload()
-        db.collection('contents').add({
+        setLoading(true);
+        const downloadUrl = await uploadImage(uri, storagePath);
+        setSrc(downloadUrl)
+        const review = {
             userId: `${user.userId}`,
+            itemId: id,
             name: `${user.name}`,
+            src: `${downloadUrl}`,
             title,
-            src: `${image}`,
             dsc,
             url,
+            reviewText,
             timestamp: firebase.firestore.FieldValue.serverTimestamp(),
             star: 0,
-        })
+        } as Review;
+        await db
+            .collection("contents")
+            .doc(id)
+            .collection("reviews")
+            .add(review)
             .then((docref) => {
-                db.collection('contents').doc(docref.id).set({
-                    id: docref.id,
-                }, { merge: true }//←上書きされないおまじない
-                )
+                db.collection('contents')
+                    .doc(id)
+                    .collection("reviews").doc(docref.id).set({
+                        id: docref.id,
+                    }, { merge: true }//←上書きされないおまじない
+                    )
             })
             .catch((error) => {
                 console.error("Error writing document: ", error);
             })
-    }
-    const uploadImage = async (uri: string, path: string) => {
+        fetchReviews()
+        setLoading(false);
+        navigation.goBack();
+    };
+
+    const fetchReviews = async () => {
+        const reviews = await getReviews(id);
+        setReviews(reviews);
+    };
+
+    const pickImage = async () => {
+        let result = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.All,
+            allowsEditing: true,
+            aspect: [4, 4],
+            quality: 1,
+        });
+        if (!result.cancelled) {
+            setUri(result.uri);
+            const ext = getExtention(result.uri);
+            const storagePath = `items/${id}/${daytime}.${ext}`;
+            setStoragePath(storagePath)
+        }
+    };
+    const uploadImage = async (uri: string, storagePath: string) => {
         const localUri = await fetch(uri);
         const blob = await localUri.blob();
-        const ref = firebase.storage().ref().child(path);
+        const ref = firebase.storage().ref().child(storagePath);
         let downloadUrl = "";
         try {
             await ref.put(blob);
@@ -91,29 +130,18 @@ export default function ReviewScreen({ navigation, route }) {
         }
         return downloadUrl;
     };
-    const handleUpload = async () => {
-        setLoading(true);
-        try {
-            const storagePath = `/images/${image}`;
-            const downloadUrl = await uploadImage(image, storagePath);
-            setImage("")
-        }
-        catch (error) {
-        }
-        setLoading(false);
-        navigation.goBack();
-    };
+
     return (
         <TouchableWithoutFeedback
             onPress={() => {
                 Keyboard.dismiss()
             }}>
             <View style={styles.container}>
-                <Text style={{ margin: 10 }}>name: {user.name}</Text>
+                <Text style={{ margin: 10 }}>name: {user.name}{`${storagePath}`}</Text>
                 <Text style={{ fontSize: 30 }}>レビュー</Text>
                 <TextInput
                     placeholder="What's your Review?"
-                    style={{ height: 100, padding: 10, backgroundColor: 'white' }}
+                    style={{ height: 80, padding: 10, backgroundColor: 'white' }}
                     value={reviewText}
                     onChangeText={setReviewText}
                     multiline={true}
@@ -123,16 +151,17 @@ export default function ReviewScreen({ navigation, route }) {
                     style={{ height: 30, padding: 10, backgroundColor: 'white' }}
                     value={dsc}
                     onChangeText={setDsc}
-                />
+                /> */}
                 <TextInput
                     placeholder="　url"
                     style={styles.input}
                     value={url}
                     onChangeText={setUrl}
-                /> */}
+                />
                 <ButtonIcon name="camera-retro" onPress={pickImage} color="gray" />
-                {image ? <Image source={{ uri: image }} style={styles.image} /> : null}
+                {uri ? <Image source={{ uri: uri }} style={styles.image} /> : null}
                 <ButtonText onPress={() => handleCreate()} text="レビューを投稿する" />
+                <Loading visible={loading} />
             </View>
         </TouchableWithoutFeedback>
     );
@@ -141,16 +170,19 @@ export default function ReviewScreen({ navigation, route }) {
 const styles = StyleSheet.create({
     image: {
         width: 200,
-
         height: 150,
         resizeMode: "cover",
     },
-    // button: {
-    //     flexBasis: '100%',
-    //     color: 'white',
-    //     backgroundColor: "black",
-    //     justifyContent: 'center',
-    // },
+    loading: {
+        width: "100%",
+        height: "100%",
+        position: "absolute",
+        top: 0,
+        left: 0,
+        backgroundColor: "rgba(255, 255, 255, 0.5)",
+        alignItems: "center",
+        justifyContent: "center",
+    },
     container: {
         width: "100%",
         height: 250,

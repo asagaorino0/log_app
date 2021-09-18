@@ -5,6 +5,7 @@ import * as ImagePicker from 'expo-image-picker';
 import { StackNavigationProp } from "@react-navigation/stack";
 import { RouteProp } from "@react-navigation/native";
 import { Detail } from '../types/detail'
+import { loginUser } from "../lib/firebase";
 import ButtonIcon from '../components/ButtonIcon'
 // import ButtonText from '../components/Button'
 import classname from 'classnames'
@@ -12,28 +13,26 @@ import { UserContext } from "../context/userContext";
 
 export default function UploadScreen({ navigation, route }) {
     const { user } = useContext(UserContext)
+    const [name, setName] = useState('');
     const item = route.params;
     const src = route.params?.src;
-    // const name = user?.name;
     const star = route.params?.star;
     const [reviewText, setReviewText] = useState('');
     const [image, setImage] = useState<string>(null);
     const [title, setTitle] = useState('');
-    // const [user, setUser] = useState(user);
-    const [name, setName] = useState<string>(user.name);
     const [url, setUrl] = useState('');
     const [dsc, setDsc] = useState("");
     const db = firebase.firestore()
     const [loading, setLoading] = useState<boolean>(false);
-    // useEffect(() => {
-    //     console.log(user.name)
-    //     // navigation.setOptions({
-    //     // title: user.name,
-    //     // headerLeft: () => (
-    //     // <Button onPress={() => navigation.goBack()} title="✕" />
-    //     // ),
-    //     // });
-    // }, []);
+
+    useEffect(() => {
+        const fetchUser = async () => {
+            const user = await loginUser();
+            console.log(user.name)
+            setName(user.name)
+        };
+        fetchUser();
+    }, []);
     type RootStackParamList = {
         Main: undefined;
         Detail: { item: Detail };
@@ -104,44 +103,44 @@ export default function UploadScreen({ navigation, route }) {
     };
     return (
         <SafeAreaView style={styles.container} >
-            {/* <TouchableWithoutFeedback
+            <TouchableWithoutFeedback
                 onPress={() => {
                     Keyboard.dismiss()
-                }}> */}
-            <View style={styles.container}>
-                <Text style={{ margin: 10 }}>name:{user.name}</Text>
-                <Text style={{ fontSize: 30 }}>新規投稿</Text>
-                <TextInput
-                    placeholder="Title?"
-                    style={{ height: 30, padding: 10, backgroundColor: 'white' }}
-                    value={title}
-                    onChangeText={setTitle}
-                    multiline={true}
-                />
-                <TextInput
-                    placeholder="What's your Review?"
-                    style={{ height: 30, padding: 10, backgroundColor: 'white' }}
-                    value={reviewText}
-                    onChangeText={setReviewText}
-                    multiline={true}
-                />
-                <TextInput
-                    placeholder="詳細"
-                    style={{ height: 30, padding: 10, backgroundColor: 'white' }}
-                    value={dsc}
-                    onChangeText={setDsc}
-                />
-                <TextInput
-                    placeholder="　url"
-                    style={styles.input}
-                    value={url}
-                    onChangeText={setUrl}
-                />
-                <ButtonIcon name="camera-retro" onPress={pickImage} color="gray" />
-                {image ? <Image source={{ uri: image }} style={styles.image} /> : null}
-                <Button onPress={() => handleCreate()} title="記事を投稿する" />
-            </View>
-            {/* </TouchableWithoutFeedback> */}
+                }}>
+                <View style={styles.container}>
+                    <Text style={{ margin: 10 }}>name:{user.name}</Text>
+                    <Text style={{ fontSize: 30 }}>新規投稿</Text>
+                    <TextInput
+                        placeholder="Title?"
+                        style={{ height: 30, padding: 10, backgroundColor: 'white' }}
+                        value={title}
+                        onChangeText={setTitle}
+                        multiline={true}
+                    />
+                    <TextInput
+                        placeholder="What's your Review?"
+                        style={{ height: 30, padding: 10, backgroundColor: 'white' }}
+                        value={reviewText}
+                        onChangeText={setReviewText}
+                        multiline={true}
+                    />
+                    <TextInput
+                        placeholder="詳細"
+                        style={{ height: 30, padding: 10, backgroundColor: 'white' }}
+                        value={dsc}
+                        onChangeText={setDsc}
+                    />
+                    <TextInput
+                        placeholder="　url"
+                        style={styles.input}
+                        value={url}
+                        onChangeText={setUrl}
+                    />
+                    <ButtonIcon name="camera-retro" onPress={pickImage} color="gray" />
+                    {image ? <Image source={{ uri: image }} style={styles.image} /> : null}
+                    <Button onPress={() => handleCreate()} title="記事を投稿する" />
+                </View>
+            </TouchableWithoutFeedback>
         </SafeAreaView>
     );
 }

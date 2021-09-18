@@ -9,4 +9,6 @@ export type Detail = {
     id: string
     url: string
     dsc: string
+    reviewText: string
+    route: any
 }

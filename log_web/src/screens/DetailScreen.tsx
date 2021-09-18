@@ -1,69 +1,81 @@
-import React, { useContext, useState, useEffect } from 'react';
-import { View, Text, StyleSheet, Button, Image, TouchableOpacity, Linking } from 'react-native';
-import { StackNavigationProp } from "@react-navigation/stack";
-import { RouteProp } from "@react-navigation/native";
+import React, { useContext, useEffect } from 'react';
+import { View, Text, StyleSheet, Button, FlatList, Image, TouchableOpacity, Linking } from 'react-native';
 import { Detail } from '../types/detail'
-import classname from 'classnames'
+import { Review } from "../types/review";
 import { AntDesign } from '@expo/vector-icons';
-import Hyperlink from 'react-native-hyperlink'
+import { ReviewItem } from "../components/ReviewItem";
+// import { StackNavigationProp } from "@react-navigation/stack";
+// import { RouteProp } from "@react-navigation/native";
+// import classname from 'classnames'
 // import { makeStyles } from '@material-ui/core/styles';
 import { UserContext } from "../context/userContext";
-
+import { ReviewsContext } from "../context/reviewsContext";
+import { getReviews } from "../lib/firebase";
 export default function DetailScreen({ navigation, route }) {
     const { user } = useContext(UserContext)
+    const { reviews, setReviews } = useContext(ReviewsContext);
+    const { detail } = route.params;
     const title = route.params?.title;
     const src = route.params?.src;
     const name = route.params?.name;
     const star = route.params?.star;
     const url = route.params?.url;
+    const id = route.params?.id;
 
     useEffect(() => {
         navigation.setOptions({
             title,
         });
-    }, [navigation]);
+        const fetchReviews = async () => {
+            const reviews = await getReviews(id);
+            setReviews(reviews);
+        };
+        fetchReviews();
+    }, []);
 
     type RootStackParamList = {
         Main: undefined;
-        Detail: { item: Detail };
+        Review: { reviews: Review };
     };
-    type Props = {
-        navigation: StackNavigationProp<RootStackParamList, "Detail">;
-        route: RouteProp<RootStackParamList, "Detail">;
-    };
-    // const className = require('classnames')
+    // type Props = {
+    //     navigation: StackNavigationProp<RootStackParamList, "Detail">;
+    //     route: RouteProp<RootStackParamList, "Detail">;
+    // };
+
 
     const handleDetail = (item: Detail) => {
         navigation.navigate({
             name: 'Review',
             params: {
                 title: item.title,
-                name: item.name,
+                name: user.name,
                 star: item.star,
                 src: item.src,
                 url: item.url,
+                id: item.id,
             },
             merge: true,
         });
     }
-
     return (
         <View style={styles.container}>
             <Image style={styles.image} source={{ uri: src }}></Image>
             <Text style={{ margin: 10 }}>name: {name}</Text>
-            <Hyperlink linkDefault={true}>
-                <Text style={{ fontSize: 15 }}>
-
-                    {url}
-                </Text>
-            </Hyperlink>
-            {/* <Hyperlink >{url}</Hyperlink> */}
-            <Text style={{ fontSize: 30 }}>This is a {title}!</Text>
-            {/* <Button onPress={() => navigation.goBack()} title="Mainへ" /> */}
+            <View style={styles.container}>
+                <FlatList
+                    // ListHeaderComponent={<Detail detail={setail} />}
+                    data={reviews}
+                    renderItem={({ item }: { item: Review }) => (
+                        <ReviewItem review={item} />
+                    )}
+                    keyExtractor={(item: Review) => item.id}
+                />
+                <Text style={{ margin: 10 }}>name: WW {id}</Text>
+            </View>
             <TouchableOpacity
                 onPress={() => handleDetail(route.params)}
             >
-                <AntDesign name="pluscircle" size={36} color="red" />
+                <AntDesign name="pluscircle" size={40} color="red" />
             </TouchableOpacity>
         </View>
     );
@@ -85,19 +97,5 @@ const styles = StyleSheet.create({
         flex: 1,
         // justifyContent: 'center',
         alignItems: 'center',
-    },
-    // container: {
-    //     flex: 1,
-    //     backgroundColor: "#fff",
-    //     justifyContent: "flex-start",
-    //     width: "100%",
-    // },
-    heading: {
-        fontSize: 24,
-        color: 'rgba(14, 13, 13, .38)',
-    },
-    paragraph: {
-        fontSize: 18,
-        color: '#737373',
     },
 });

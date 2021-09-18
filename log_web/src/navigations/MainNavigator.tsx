@@ -6,22 +6,24 @@ import MainScreen from '../screens/MainScreen'
 import DetailScreen from '../screens/DetailScreen';
 import ReviewScreen from '../screens/ReviewScreen';
 import { UserContext } from "../context/userContext";
+import { ReviewsContext } from "../context/reviewsContext";
 import SubScreen from '../screens/SubScreen'
 
 const Stack = createStackNavigator();
 const RootStack = createStackNavigator();
-const SubStack = () => (
-    <Stack.Navigator    >
-        <Stack.Screen
-            name="Sub"
-            component={SubScreen}
-            options={{ headerShown: false }}
-        />
-    </Stack.Navigator>
-);
+// const SubStack = () => (
+//     <Stack.Navigator    >
+//         <Stack.Screen
+//             name="Sub"
+//             component={SubScreen}
+//             options={{ headerShown: false }}
+//         />
+//     </Stack.Navigator>
+// );
 
 export const MainNavigator = () => {
-    // const { user } = useContext(UserContext);
+    const { user } = useContext(UserContext);
+    const { reviews } = useContext(ReviewsContext);
     return (
         //         // <NavigationContainer>
         //             {!user ? <SubStack /> : 
@@ -30,18 +32,15 @@ export const MainNavigator = () => {
         //         // </NavigationContainer>
     );
 };
-// export const MainNavigator = () => {
-//     const { user } = useContext(UserContext);
+
 const RootStackNavigator = () => {
     return (
         //         <NavigationContainer>
         //             {!user ? <SubScreen /> :
         <RootStack.Navigator>
-
             <RootStack.Group>
-
                 <RootStack.Screen
-                    name="Main"
+                    name="mmain"
                     component={MainScreen}
                     options={{ headerShown: false }}
                 />
@@ -55,12 +54,16 @@ const RootStackNavigator = () => {
                     component={SubScreen}
                 // options={{ headerShown: false }}
                 />
-            </RootStack.Group>
-            <RootStack.Group screenOptions={{ presentation: 'modal' }}>
                 <RootStack.Screen
                     name="Review"
                     component={ReviewScreen}
                 />
+            </RootStack.Group>
+            <RootStack.Group screenOptions={{ presentation: 'modal' }}>
+                {/* <RootStack.Screen
+                    name="Review"
+                    component={ReviewScreen}
+                /> */}
             </RootStack.Group>
         </RootStack.Navigator>
         // }

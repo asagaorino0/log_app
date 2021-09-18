@@ -1,8 +1,8 @@
 import React, { useContext, useState, useEffect } from 'react';
-import { SafeAreaView, View, FlatList, StyleSheet, Image, Button, TouchableOpacity, Dimensions, Alert } from 'react-native';
+import { SafeAreaView, Text, View, FlatList, StyleSheet, Image, Button, TouchableOpacity, Dimensions, Alert } from 'react-native';
 import firebase from "../lib/firebase";
 import { loginUser } from "../lib/firebase";
-import { UserContext, user } from "../context/userContext";
+import { UserContext } from "../context/userContext";
 import Card from '../components/Card'
 import { StackNavigationProp } from "@react-navigation/stack";
 import { Detail } from '../types/detail'
@@ -26,7 +26,7 @@ export default function MainScreen({ navigation, route }: { navigation: any, rou
     useEffect(() => {
         const fetchUser = async () => {
             const user = await loginUser();
-            setUser(user as user);
+            setUser(user);
             setUserId(user.userId)
             setName(user.name)
         };
@@ -61,6 +61,7 @@ export default function MainScreen({ navigation, route }: { navigation: any, rou
                                 star: item.star,
                                 src: item.src,
                                 url: item.url,
+                                id: item.id
                             },
                             merge: true,
                         });
@@ -79,6 +80,7 @@ export default function MainScreen({ navigation, route }: { navigation: any, rou
                 keyExtractor={(item, index) => index.toString()}
                 numColumns={2}
             />
+            <Text>name:{name}</Text>
             <Button
                 onPress={() => navigation.navigate('Detail')}
                 title="Open D"

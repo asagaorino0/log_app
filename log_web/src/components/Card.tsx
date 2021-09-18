@@ -12,6 +12,7 @@ export default function SimpleCard({ contents }: { contents: Detail }
         <Card style={styles.container} >
             <Card.Content>
                 <Title>{contents.title}</Title>
+                <Text>{contents.id}</Text>
                 <Image
                     source={{ uri: `${contents.src}` }}
                     style={styles.image}

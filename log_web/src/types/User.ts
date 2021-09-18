@@ -3,8 +3,3 @@ export type User = {
     userId?: string
     uid: string
 }
-
-export type initialUser = {
-    name: ""
-    // id?: string
-}
