@@ -40,7 +40,7 @@ const RootStackNavigator = () => {
         <RootStack.Navigator>
             <RootStack.Group>
                 <RootStack.Screen
-                    name="mmain"
+                    name="戻る"
                     component={MainScreen}
                     options={{ headerShown: false }}
                 />

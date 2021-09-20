@@ -2,15 +2,19 @@ import React, { useContext, useEffect } from 'react';
 import { View, Text, StyleSheet, Button, FlatList, Image, TouchableOpacity, Linking } from 'react-native';
 import { Detail } from '../types/detail'
 import { Review } from "../types/review";
+import { StackNavigationProp } from "@react-navigation/stack/lib/typescript/src/types";
+import { RouteProp } from "@react-navigation/native";
+import { RootStackParamList } from "../types/rootStackParamList";
 import { AntDesign } from '@expo/vector-icons';
 import { ReviewItem } from "../components/ReviewItem";
-// import { StackNavigationProp } from "@react-navigation/stack";
-// import { RouteProp } from "@react-navigation/native";
 // import classname from 'classnames'
 // import { makeStyles } from '@material-ui/core/styles';
 import { UserContext } from "../context/userContext";
 import { ReviewsContext } from "../context/reviewsContext";
 import { getReviews } from "../lib/firebase";
+import ButtonImage from '../components/ButtonImage'
+import Hyperlink from 'react-native-hyperlink'
+
 export default function DetailScreen({ navigation, route }) {
     const { user } = useContext(UserContext)
     const { reviews, setReviews } = useContext(ReviewsContext);
@@ -20,6 +24,7 @@ export default function DetailScreen({ navigation, route }) {
     const name = route.params?.name;
     const star = route.params?.star;
     const url = route.params?.url;
+    const git = route.params?.git;
     const id = route.params?.id;
 
     useEffect(() => {
@@ -33,14 +38,11 @@ export default function DetailScreen({ navigation, route }) {
         fetchReviews();
     }, []);
 
-    type RootStackParamList = {
-        Main: undefined;
-        Review: { reviews: Review };
+    type Props = {
+        navigation: StackNavigationProp<RootStackParamList, "Detail">;
+        route: RouteProp<RootStackParamList, "Detail">;
+        ButtonImege: any;
     };
-    // type Props = {
-    //     navigation: StackNavigationProp<RootStackParamList, "Detail">;
-    //     route: RouteProp<RootStackParamList, "Detail">;
-    // };
 
 
     const handleDetail = (item: Detail) => {
@@ -53,29 +55,42 @@ export default function DetailScreen({ navigation, route }) {
                 src: item.src,
                 url: item.url,
                 id: item.id,
+                git: item.git,
             },
             merge: true,
         });
     }
+    const onPress = async (url) => {
+        const supported = await Linking.canOpenURL(url);
+        if (supported) {
+            await Linking.openURL(url);
+        }
+    }
     return (
         <View style={styles.container}>
-            <Image style={styles.image} source={{ uri: src }}></Image>
-            <Text style={{ margin: 10 }}>name: {name}</Text>
+            <ButtonImage style={styles.image} source={{ uri: src }} onPress={() => onPress(url)}></ButtonImage>
+            <View>
+                {/* {git.length !== 0 && */}
+                <Hyperlink linkDefault={true}>
+                    <Text style={styles.nameText}>
+                        {git}
+                    </Text>
+                </Hyperlink>
+                {/* } */}
+            </View>
             <View style={styles.container}>
                 <FlatList
-                    // ListHeaderComponent={<Detail detail={setail} />}
                     data={reviews}
                     renderItem={({ item }: { item: Review }) => (
                         <ReviewItem review={item} />
                     )}
-                    keyExtractor={(item: Review) => item.id}
+                    keyExtractor={(item: Review) => item.reviewId}
                 />
-                <Text style={{ margin: 10 }}>name: WW {id}</Text>
             </View>
             <TouchableOpacity
                 onPress={() => handleDetail(route.params)}
             >
-                <AntDesign name="pluscircle" size={40} color="red" />
+                <AntDesign name="pluscircle" size={40} color="tomato" />
             </TouchableOpacity>
         </View>
     );
@@ -85,8 +100,6 @@ const styles = StyleSheet.create({
     image: {
         width: "90%",
         height: 250,
-        // resizeMode: "cover",
-        // justifyContent: 'center',
     },
     button: {
         flexBasis: '100%',
@@ -97,5 +110,8 @@ const styles = StyleSheet.create({
         flex: 1,
         // justifyContent: 'center',
         alignItems: 'center',
+    },
+    nameText: {
+        margin: 10
     },
 });

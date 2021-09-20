@@ -2,13 +2,11 @@ import React, { useState, useContext, useEffect } from 'react';
 import { SafeAreaView, View, Text, TextInput, StyleSheet, Image, TouchableWithoutFeedback, Keyboard, Button } from 'react-native';
 import firebase from "../lib/firebase";
 import * as ImagePicker from 'expo-image-picker';
-import { StackNavigationProp } from "@react-navigation/stack";
+import { StackNavigationProp } from "@react-navigation/stack/lib/typescript/src/types";
 import { RouteProp } from "@react-navigation/native";
-import { Detail } from '../types/detail'
+import { RootStackParamList } from "../types/rootStackParamList";
 import { loginUser } from "../lib/firebase";
 import ButtonIcon from '../components/ButtonIcon'
-// import ButtonText from '../components/Button'
-import classname from 'classnames'
 import { UserContext } from "../context/userContext";
 
 export default function UploadScreen({ navigation, route }) {
@@ -21,6 +19,7 @@ export default function UploadScreen({ navigation, route }) {
     const [image, setImage] = useState<string>(null);
     const [title, setTitle] = useState('');
     const [url, setUrl] = useState('');
+    const [git, setGit] = useState('');
     const [dsc, setDsc] = useState("");
     const db = firebase.firestore()
     const [loading, setLoading] = useState<boolean>(false);
@@ -33,10 +32,7 @@ export default function UploadScreen({ navigation, route }) {
         };
         fetchUser();
     }, []);
-    type RootStackParamList = {
-        Main: undefined;
-        Detail: { item: Detail };
-    };
+
     type Props = {
         navigation: StackNavigationProp<RootStackParamList, "Detail">;
         route: RouteProp<RootStackParamList, "Detail">;
@@ -61,6 +57,7 @@ export default function UploadScreen({ navigation, route }) {
             title,
             src: `${image}`,
             dsc,
+            git,
             url,
             userId: `${user.userId}`,
             timestamp: firebase.firestore.FieldValue.serverTimestamp(),
@@ -75,6 +72,7 @@ export default function UploadScreen({ navigation, route }) {
             .catch((error) => {
                 console.error("Error writing document: ", error);
             })
+        navigation.goBack();
     }
     const uploadImage = async (uri: string, path: string) => {
         const localUri = await fetch(uri);
@@ -98,8 +96,6 @@ export default function UploadScreen({ navigation, route }) {
         }
         catch (error) {
         }
-        setLoading(false);
-        navigation.goBack();
     };
     return (
         <SafeAreaView style={styles.container} >
@@ -108,25 +104,25 @@ export default function UploadScreen({ navigation, route }) {
                     Keyboard.dismiss()
                 }}>
                 <View style={styles.container}>
-                    <Text style={{ margin: 10 }}>name:{user.name}</Text>
-                    <Text style={{ fontSize: 30 }}>新規投稿</Text>
+                    <Text style={styles.name}>name:{user.name}</Text>
+                    <Text style={styles.text}>新規投稿</Text>
                     <TextInput
                         placeholder="Title?"
-                        style={{ height: 30, padding: 10, backgroundColor: 'white' }}
+                        style={styles.input}
                         value={title}
                         onChangeText={setTitle}
                         multiline={true}
                     />
                     <TextInput
                         placeholder="What's your Review?"
-                        style={{ height: 30, padding: 10, backgroundColor: 'white' }}
+                        style={styles.input}
                         value={reviewText}
                         onChangeText={setReviewText}
                         multiline={true}
                     />
                     <TextInput
                         placeholder="詳細"
-                        style={{ height: 30, padding: 10, backgroundColor: 'white' }}
+                        style={styles.input}
                         value={dsc}
                         onChangeText={setDsc}
                     />
@@ -135,6 +131,12 @@ export default function UploadScreen({ navigation, route }) {
                         style={styles.input}
                         value={url}
                         onChangeText={setUrl}
+                    />
+                    <TextInput
+                        placeholder="　git"
+                        style={styles.input}
+                        value={git}
+                        onChangeText={setGit}
                     />
                     <ButtonIcon name="camera-retro" onPress={pickImage} color="gray" />
                     {image ? <Image source={{ uri: image }} style={styles.image} /> : null}
@@ -167,10 +169,15 @@ const styles = StyleSheet.create({
         color: 'rgba(14, 13, 13, .38)',
     },
     input: {
+        marginTop: 5,
         height: 50,
         borderColor: "#999",
-        borderBottomWidth: 1,
         backgroundColor: 'white',
-        // marginTop: 10,
     },
+    text: {
+        fontSize: 30
+    },
+    name: {
+        margin: 10
+    }
 });

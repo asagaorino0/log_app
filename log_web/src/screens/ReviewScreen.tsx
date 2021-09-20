@@ -6,9 +6,7 @@ import { getReviews } from "../lib/firebase";
 import firestore from "../lib/firebase";
 import { storage } from "../lib/firebase";
 import * as ImagePicker from 'expo-image-picker';
-import { StackNavigationProp } from "@react-navigation/stack";
-import { RouteProp } from "@react-navigation/native";
-import { Detail } from '../types/detail'
+// import { Detail } from '../types/detail'
 import ButtonIcon from '../components/ButtonIcon'
 import ButtonText from '../components/Button'
 import { Loading } from '../components/Loading'
@@ -16,18 +14,27 @@ import classname from 'classnames'
 import { UserContext } from "../context/userContext";
 import { ReviewsContext } from "../context/reviewsContext";
 import { Review } from "../types/review";
+import { StackNavigationProp } from "@react-navigation/stack/lib/typescript/src/types";
+import { RouteProp } from "@react-navigation/native";
+import { RootStackParamList } from "../types/rootStackParamList";
 import moment from "moment";
+// import { Stars } from "../components/Stars";
+import { StarSet } from "../components/StarSet";
+
+
 export default function ReviewScreen({ navigation, route }) {
     const { setUser, user } = useContext(UserContext)
     const { setReviews, reviews } = useContext(ReviewsContext)
     const item = route.params;
     const title = route.params?.title;
     const id = route.params?.id;
-    const star = route.params?.star;
+    // const star = route.params?.star;
     const [reviewText, setReviewText] = useState('');
     const [storagePath, setStoragePath] = useState("");
     const [uri, setUri] = useState('');
     const [src, setSrc] = useState('');
+    const [star, setStar] = useState<number>();
+    const [git, setGit] = useState('');
     const [url, setUrl] = useState('');
     const [dsc, setDsc] = useState("");
     const [itemId, setItemId] = useState('');
@@ -48,10 +55,7 @@ export default function ReviewScreen({ navigation, route }) {
         };
         fetchUser();
     }, []);
-    type RootStackParamList = {
-        Main: undefined;
-        Detail: { item: Detail };
-    };
+
     type Props = {
         navigation: StackNavigationProp<RootStackParamList, "Detail">;
         route: RouteProp<RootStackParamList, "Detail">;
@@ -72,10 +76,11 @@ export default function ReviewScreen({ navigation, route }) {
             src: `${downloadUrl}`,
             title,
             dsc,
+            git,
             url,
             reviewText,
             timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-            star: 0,
+            star,
         } as Review;
         await db
             .collection("contents")
@@ -86,7 +91,7 @@ export default function ReviewScreen({ navigation, route }) {
                 db.collection('contents')
                     .doc(id)
                     .collection("reviews").doc(docref.id).set({
-                        id: docref.id,
+                        reviewId: docref.id,
                     }, { merge: true }//←上書きされないおまじない
                     )
             })
@@ -107,7 +112,8 @@ export default function ReviewScreen({ navigation, route }) {
         let result = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.All,
             allowsEditing: true,
-            aspect: [4, 4],
+            // aspect: [4, 4],
+
             quality: 1,
         });
         if (!result.cancelled) {
@@ -137,24 +143,33 @@ export default function ReviewScreen({ navigation, route }) {
                 Keyboard.dismiss()
             }}>
             <View style={styles.container}>
-                <Text style={{ margin: 10 }}>name: {user.name}{`${storagePath}`}</Text>
-                <Text style={{ fontSize: 30 }}>レビュー</Text>
+                {/* <Text style={{ margin: 10 }}>name: {user.name}{`${storagePath}`}</Text> */}
+                {/* <Stars star={star} starSize={16} textSize={12} /> */}
+                <StarSet star={star} onChangeStar={(value) => setStar(value)} />
+                <Text style={styles.text}>レビュー</Text>
                 <TextInput
                     placeholder="What's your Review?"
-                    style={{ height: 80, padding: 10, backgroundColor: 'white' }}
+                    style={styles.inputReview}
                     value={reviewText}
                     onChangeText={setReviewText}
                     multiline={true}
                 />
-                {/* <TextInput
+                <TextInput
                     placeholder="詳細"
-                    style={{ height: 30, padding: 10, backgroundColor: 'white' }}
+                    style={styles.inputReview}
                     value={dsc}
                     onChangeText={setDsc}
-                /> */}
+                    multiline={true}
+                />
+                <TextInput
+                    placeholder="　github"
+                    style={styles.inputUrl}
+                    value={git}
+                    onChangeText={setGit}
+                />
                 <TextInput
                     placeholder="　url"
-                    style={styles.input}
+                    style={styles.inputUrl}
                     value={url}
                     onChangeText={setUrl}
                 />
@@ -170,33 +185,32 @@ export default function ReviewScreen({ navigation, route }) {
 const styles = StyleSheet.create({
     image: {
         width: 200,
-        height: 150,
+        height: 200,
         resizeMode: "cover",
-    },
-    loading: {
-        width: "100%",
-        height: "100%",
-        position: "absolute",
-        top: 0,
-        left: 0,
-        backgroundColor: "rgba(255, 255, 255, 0.5)",
-        alignItems: "center",
-        justifyContent: "center",
+        // justifyContent: 'center',
     },
     container: {
         width: "100%",
-        height: 250,
+        height: "100%",
         resizeMode: "cover",
     },
     heading: {
         fontSize: 24,
         color: 'rgba(14, 13, 13, .38)',
     },
-    input: {
+    inputUrl: {
         height: 50,
         borderColor: "#999",
-        borderBottomWidth: 1,
         backgroundColor: 'white',
-        // marginTop: 10,
+        marginTop: 5,
+    },
+    inputReview: {
+        marginTop: 5,
+        height: 60,
+        padding: 10,
+        backgroundColor: 'white'
+    },
+    text: {
+        fontSize: 30
     },
 });

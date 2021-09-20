@@ -12,11 +12,11 @@ import ButtonImage from '../components/ButtonImage'
 
 type Props = {
     review: Review;
-    ButtonImege: Review;
+    ButtonImage: Review;
 };
 
-export const ReviewItem: React.FC<Props> = ({ review }: Props) => {
-    const timestamp = moment(review.timestamp.toDate()).format("YYYY/M/D");
+export const SearchReviewItem: React.FC<Props> = ({ review }: Props) => {
+    // const timestamp = moment(review.timestamp.toDate()).format("YYYY/M/D");
     const db = firebase.firestore()
     const id = review.itemId
     const { reviews, setReviews } = useContext(ReviewsContext);
@@ -30,13 +30,15 @@ export const ReviewItem: React.FC<Props> = ({ review }: Props) => {
     const openUrl = async (url) => {
         const supported = await Linking.canOpenURL(url);
         if (supported) {
-            await Linking.openURL(review.src);
+            await Linking.openURL(review.src)
         }
     }
     const openGit = async (url) => {
         const supported = await Linking.canOpenURL(url);
         if (supported) {
             await Linking.openURL(review.git);
+        } else {
+            return
         }
     }
     return (
@@ -46,15 +48,13 @@ export const ReviewItem: React.FC<Props> = ({ review }: Props) => {
                     <Stars star={review.star} starSize={16} textSize={12} />
                     <Text style={styles.reviewText} onPress={() => openGit(review.src)}>{review.reviewText}</Text>
                 </View>
-                <Text
-                    style={styles.nameText}
-                >{`${review.name}   ${timestamp}`}</Text>
                 {review.url.length !== 0 &&
                     <Hyperlink linkDefault={true}>
                         <Text style={styles.urlText}>
                             {`参考サイト：${review.url}`}
                         </Text>
                     </Hyperlink>}
+                <Text style={styles.reviewText} >{review.dsc}</Text>
             </View>
             <View style={styles.rightContainer}  >
                 <ButtonImage style={styles.image} source={{ uri: review.src }} onPress={() => openUrl(review.src)}></ButtonImage>
@@ -91,9 +91,5 @@ const styles = StyleSheet.create({
         color: "#888",
         fontSize: 12,
         width: 210,
-    },
-    nameText: {
-        color: "#888",
-        fontSize: 12,
     },
 });

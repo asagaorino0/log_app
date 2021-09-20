@@ -4,13 +4,12 @@ import firebase from "../lib/firebase";
 import { loginUser } from "../lib/firebase";
 import { UserContext } from "../context/userContext";
 import Card from '../components/Card'
-import { StackNavigationProp } from "@react-navigation/stack";
 import { Detail } from '../types/detail'
+import { StackNavigationProp } from "@react-navigation/stack/lib/typescript/src/types";
+import { RouteProp } from "@react-navigation/native";
+import { RootStackParamList } from "../types/rootStackParamList";
 // import { makeStyles } from '@material-ui/core/styles';
-type RootStackParamList = {
-    Main: undefined;
-    Detail: { contents: Detail };
-};
+
 type Props = {
     navigation: StackNavigationProp<RootStackParamList, "Main">;
 };
@@ -61,7 +60,8 @@ export default function MainScreen({ navigation, route }: { navigation: any, rou
                                 star: item.star,
                                 src: item.src,
                                 url: item.url,
-                                id: item.id
+                                id: item.id,
+                                git: item.git
                             },
                             merge: true,
                         });
@@ -81,10 +81,7 @@ export default function MainScreen({ navigation, route }: { navigation: any, rou
                 numColumns={2}
             />
             <Text>name:{name}</Text>
-            <Button
-                onPress={() => navigation.navigate('Detail')}
-                title="Open D"
-            />
+
         </SafeAreaView >
     );
 }

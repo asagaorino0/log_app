@@ -6,11 +6,13 @@ export type Review = {
     title: string,
     dsc: string,
     url: string,
-    reviewText; string,
+    reviewText: string,
     navigation: any,
     star: number
-    id: string
+    reviewId: string
     createdAt: string
     timestamp: any,
     itemId: string
+    ButtonImege: any;
+    git: string;
 }

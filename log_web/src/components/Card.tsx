@@ -4,6 +4,7 @@ import { Card, Title, Paragraph, Text, Button } from 'react-native-paper';
 import { FontAwesome } from '@expo/vector-icons';
 import { StackNavigationProp } from "@react-navigation/stack";
 import { Detail } from '../types/detail'
+import { Stars } from "../components/Stars";
 
 
 export default function SimpleCard({ contents }: { contents: Detail }
@@ -12,14 +13,13 @@ export default function SimpleCard({ contents }: { contents: Detail }
         <Card style={styles.container} >
             <Card.Content>
                 <Title>{contents.title}</Title>
-                <Text>{contents.id}</Text>
+                {/* <Text>{contents.id}</Text> */}
                 <Image
                     source={{ uri: `${contents.src}` }}
                     style={styles.image}
                 />
-                <FontAwesome name="star" size={24} />
-                <FontAwesome name="star-o" size={24} />
-                <Paragraph>{contents.name}</Paragraph>
+                <Stars star={contents.star} starSize={16} textSize={12} />
+                {/* <Paragraph>{contents.name}</Paragraph> */}
             </Card.Content>
         </Card >
     )

@@ -1,35 +1,40 @@
 import * as React from 'react';
+
 import {
     StyleSheet,
     TouchableOpacity,
     GestureResponderEvent,
-    NativeSyntheticEvent, NativeTouchEvent
+    Image,
+    NativeSyntheticEvent,
+    NativeTouchEvent
 } from "react-native";
-import { FontAwesome } from "@expo/vector-icons";
 
 type Props = {
     onPress: (ev: NativeSyntheticEvent<NativeTouchEvent>) => void;
-    color?: string;
+    src: any;
     accessibilityLabel?: string;
     disabled?: boolean;
-    name: any;
     testID?: string;
+    source: any;
+    style: any;
 }
 
-export default function ButtonIcon({
+export default function ButtonImage({
     onPress,
-    name,
-    color = "#000",
+    src,
+    source = { uri: src },
+    style,
 }: Props) {
     return (
-        <TouchableOpacity onPress={onPress} style={styles.container}>
-            <FontAwesome name={name} color={color} size={34} />
+        <TouchableOpacity onPress={onPress} style={styles.image}>
+            <Image source={source} style={style} />
         </TouchableOpacity>
     );
 };
 
 const styles = StyleSheet.create({
-    container: {
-        margin: 10,
+    image: {
+        width: "100%",
+        alignItems: 'center',
     },
 });

@@ -11,4 +11,5 @@ export type Detail = {
     dsc: string
     reviewText: string
     route: any
+    git: string
 }
