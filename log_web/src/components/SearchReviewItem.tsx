@@ -59,7 +59,7 @@ export const SearchReviewItem: React.FC<Props> = ({ review }: Props) => {
             <View style={styles.rightContainer}  >
                 <ButtonImage style={styles.image} source={{ uri: review.src }} onPress={() => openUrl(review.src)}></ButtonImage>
             </View>
-            <Button onPress={deleteId} title="✕" />
+            {/* <Button onPress={deleteId} title="✕" /> */}
         </View>
     );
 };

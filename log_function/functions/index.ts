@@ -18,7 +18,7 @@ const db = admin.firestore();
 exports.onReview = functions
     .region("us-central1")
     .firestore.document("contents/{itemId}/reviews/{reviewId}")
-    .onWrite(async (change, context) => {
+    .onUpdate(async (change, context) => {
         const { itemId, reviewId } = context.params;
         const review = change.after.data() as Review;
         const db = admin.firestore();

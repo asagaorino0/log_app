@@ -9,6 +9,7 @@ import { Review } from "../types/review";
 import { ReviewsContext } from "../context/reviewsContext";
 import Hyperlink from 'react-native-hyperlink'
 import ButtonImage from '../components/ButtonImage'
+import { ButtonDel } from "../components/ButtonDel";
 
 type Props = {
     review: Review;
@@ -57,9 +58,13 @@ export const ReviewItem: React.FC<Props> = ({ review }: Props) => {
                     </Hyperlink>}
             </View>
             <View style={styles.rightContainer}  >
-                <ButtonImage style={styles.image} source={{ uri: review.src }} onPress={() => openUrl(review.src)}></ButtonImage>
+                <ButtonImage style={styles.image} source={{ url: review.src }} onPress={() => openUrl(review.src)}></ButtonImage>
+                <ButtonDel
+                    iconName="x"
+                    onPress={deleteId}
+                />
             </View>
-            <Button onPress={deleteId} title="✕" />
+            {/* <Button onPress={deleteId} title="✕" /> */}
         </View>
     );
 };

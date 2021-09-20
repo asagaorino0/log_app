@@ -14,6 +14,7 @@ import { ReviewsContext } from "../context/reviewsContext";
 import { getReviews } from "../lib/firebase";
 import ButtonImage from '../components/ButtonImage'
 import Hyperlink from 'react-native-hyperlink'
+import { ButtonPlus } from "../components/ButtonPlus";
 
 export default function DetailScreen({ navigation, route }) {
     const { user } = useContext(UserContext)
@@ -68,7 +69,7 @@ export default function DetailScreen({ navigation, route }) {
     }
     return (
         <View style={styles.container}>
-            <ButtonImage style={styles.image} source={{ uri: src }} onPress={() => onPress(url)}></ButtonImage>
+            <ButtonImage style={styles.image} src={src} onPress={() => onPress(url)}></ButtonImage>
             <View>
                 {/* {git.length !== 0 && */}
                 <Hyperlink linkDefault={true}>
@@ -87,11 +88,15 @@ export default function DetailScreen({ navigation, route }) {
                     keyExtractor={(item: Review) => item.reviewId}
                 />
             </View>
-            <TouchableOpacity
+            <ButtonPlus
+                iconName="plus"
+                onPress={() => handleDetail(route.params)}
+            />
+            {/* <TouchableOpacity
                 onPress={() => handleDetail(route.params)}
             >
                 <AntDesign name="pluscircle" size={40} color="tomato" />
-            </TouchableOpacity>
+            </TouchableOpacity> */}
         </View>
     );
 }
