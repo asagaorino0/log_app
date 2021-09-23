@@ -12,7 +12,8 @@ import { ReviewItem } from "../components/ReviewItem";
 import { UserContext } from "../context/userContext";
 import { ReviewsContext } from "../context/reviewsContext";
 import { getReviews } from "../lib/firebase";
-import ButtonImage from '../components/ButtonImage'
+// import { getStars } from "../lib/firebase";
+import { ButtonImage } from '../components/ButtonImage'
 import Hyperlink from 'react-native-hyperlink'
 import { ButtonPlus } from "../components/ButtonPlus";
 
@@ -22,8 +23,8 @@ export default function DetailScreen({ navigation, route }) {
     const { detail } = route.params;
     const title = route.params?.title;
     const src = route.params?.src;
-    const name = route.params?.name;
-    const star = route.params?.star;
+    // const name = route.params?.name;
+    // const star = route.params?.star;
     const url = route.params?.url;
     const git = route.params?.git;
     const id = route.params?.id;
@@ -34,6 +35,7 @@ export default function DetailScreen({ navigation, route }) {
         });
         const fetchReviews = async () => {
             const reviews = await getReviews(id);
+            // const reviews = await getStars(id);
             setReviews(reviews);
         };
         fetchReviews();
@@ -42,7 +44,7 @@ export default function DetailScreen({ navigation, route }) {
     type Props = {
         navigation: StackNavigationProp<RootStackParamList, "Detail">;
         route: RouteProp<RootStackParamList, "Detail">;
-        ButtonImege: any;
+        // ButtonImege: any;
     };
 
 

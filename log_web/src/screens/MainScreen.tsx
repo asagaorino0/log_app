@@ -37,13 +37,16 @@ export default function MainScreen({ navigation, route }: { navigation: any, rou
             .firestore()
             .collection("contents")
             .orderBy("title")
+            // .select('title')
             .onSnapshot((snapshot) => {
                 const contents = snapshot.docs.map((doc, id) => {
                     return doc.id &&
                         doc.data()
                 });
                 setContents(contents);
-                console.log(contents)
+                // const titleArray = array_column(contents, "title");
+
+                // console.log(titleArray)
             })
     }, [])
     return (

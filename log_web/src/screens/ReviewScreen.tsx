@@ -1,12 +1,9 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { View, Text, TextInput, StyleSheet, Image, TouchableWithoutFeedback, Keyboard, Button, ActivityIndicator } from 'react-native';
-import firebase from "../lib/firebase";
+import firebase, { createReview } from "../lib/firebase";
 import { loginUser } from "../lib/firebase";
 import { getReviews } from "../lib/firebase";
-import firestore from "../lib/firebase";
-import { storage } from "../lib/firebase";
-import * as ImagePicker from 'expo-image-picker';
-// import { Detail } from '../types/detail'
+import ImagePicker from 'expo-image-picker';
 import ButtonIcon from '../components/ButtonIcon'
 import ButtonText from '../components/Button'
 import { Loading } from '../components/Loading'
@@ -18,9 +15,7 @@ import { StackNavigationProp } from "@react-navigation/stack/lib/typescript/src/
 import { RouteProp } from "@react-navigation/native";
 import { RootStackParamList } from "../types/rootStackParamList";
 import moment from "moment";
-// import { Stars } from "../components/Stars";
 import { StarSet } from "../components/StarSet";
-
 
 export default function ReviewScreen({ navigation, route }) {
     const { setUser, user } = useContext(UserContext)
@@ -37,8 +32,8 @@ export default function ReviewScreen({ navigation, route }) {
     const [git, setGit] = useState('');
     const [url, setUrl] = useState('');
     const [dsc, setDsc] = useState("");
-    const [itemId, setItemId] = useState('');
-    const db = firebase.firestore()
+    // const [itemId, setItemId] = useState('');
+    // const db = firebase.firestore()
     const [loading, setLoading] = useState<boolean>(false);
     const daytime = moment().format("YYYYMMDDhhmmss");
 
@@ -64,7 +59,6 @@ export default function ReviewScreen({ navigation, route }) {
     const getExtention = (path: string) => {
         return path.split(".").pop();
     };
-
     const handleCreate = async () => {
         setLoading(true);
         const downloadUrl = await uploadImage(uri, storagePath);
@@ -81,39 +75,36 @@ export default function ReviewScreen({ navigation, route }) {
             reviewText,
             timestamp: firebase.firestore.FieldValue.serverTimestamp(),
             star,
+            batu: 0,
         } as Review;
-        await db
-            .collection("contents")
-            .doc(id)
-            .collection("reviews")
-            .add(review)
-            .then((docref) => {
-                db.collection('contents')
-                    .doc(id)
-                    .collection("reviews").doc(docref.id).set({
-                        reviewId: docref.id,
-                    }, { merge: true }//←上書きされないおまじない
-                    )
-            })
-            .catch((error) => {
-                console.error("Error writing document: ", error);
-            })
+        await createReview(review, id);
+        // db.collection("contents")
+        //     .doc(id)
+        //     .collection("reviews")
+        //     .add(review)
+        //     .then((docref) => {
+        //         db.collection('contents')
+        //             .doc(id)
+        //             .collection("reviews").doc(docref.id).set({
+        //                 reviewId: docref.id,
+        //             }, { merge: true }//←上書きされないおまじない
+        //             )
+        //     })
+        //     .catch((error) => {
+        //         console.error("Error writing document: ", error);
+        //     })
         fetchReviews()
         setLoading(false);
         navigation.goBack();
     };
-
     const fetchReviews = async () => {
         const reviews = await getReviews(id);
         setReviews(reviews);
     };
-
     const pickImage = async () => {
         let result = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.All,
             allowsEditing: true,
-            // aspect: [4, 4],
-
             quality: 1,
         });
         if (!result.cancelled) {
@@ -143,8 +134,6 @@ export default function ReviewScreen({ navigation, route }) {
                 Keyboard.dismiss()
             }}>
             <View style={styles.container}>
-                {/* <Text style={{ margin: 10 }}>name: {user.name}{`${storagePath}`}</Text> */}
-                {/* <Stars star={star} starSize={16} textSize={12} /> */}
                 <StarSet star={star} onChangeStar={(value) => setStar(value)} />
                 <Text style={styles.text}>レビュー</Text>
                 <TextInput
@@ -187,16 +176,11 @@ const styles = StyleSheet.create({
         width: 200,
         height: 200,
         resizeMode: "cover",
-        // justifyContent: 'center',
     },
     container: {
         width: "100%",
         height: "100%",
         resizeMode: "cover",
-    },
-    heading: {
-        fontSize: 24,
-        color: 'rgba(14, 13, 13, .38)',
     },
     inputUrl: {
         height: 50,

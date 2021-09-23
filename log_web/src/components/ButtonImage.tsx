@@ -1,5 +1,4 @@
-import * as React from 'react';
-
+import React from 'react';
 import {
     StyleSheet,
     TouchableOpacity,
@@ -10,7 +9,8 @@ import {
 } from "react-native";
 
 type Props = {
-    onPress: (ev: NativeSyntheticEvent<NativeTouchEvent>) => void;
+    // onPress: (ev: NativeSyntheticEvent<NativeTouchEvent>) => void;
+    onPress: (event: GestureResponderEvent) => void;
     src: any;
     accessibilityLabel?: string;
     disabled?: boolean;
@@ -19,12 +19,14 @@ type Props = {
     style: any;
 }
 
-export default function ButtonImage({
+// export default function ButtonImage({ 
+
+export const ButtonImage: React.FC<Props> = ({
     onPress,
     src,
     source = { uri: src },
     style,
-}: Props) {
+}: Props) => {
     return (
         <TouchableOpacity onPress={onPress} style={styles.image}>
             <Image source={source} style={style} />

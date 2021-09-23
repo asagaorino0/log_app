@@ -1,13 +1,15 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { SafeAreaView, View, Text, TextInput, StyleSheet, Image, TouchableWithoutFeedback, Keyboard, Button } from 'react-native';
-import firebase from "../lib/firebase";
+import firebase, { createContent } from "../lib/firebase";
 import * as ImagePicker from 'expo-image-picker';
 import { StackNavigationProp } from "@react-navigation/stack/lib/typescript/src/types";
 import { RouteProp } from "@react-navigation/native";
 import { RootStackParamList } from "../types/rootStackParamList";
 import { loginUser } from "../lib/firebase";
 import ButtonIcon from '../components/ButtonIcon'
+import ButtonText from '../components/Button'
 import { UserContext } from "../context/userContext";
+import { Detail } from '../types/detail'
 
 export default function UploadScreen({ navigation, route }) {
     const { user } = useContext(UserContext)
@@ -15,13 +17,12 @@ export default function UploadScreen({ navigation, route }) {
     const item = route.params;
     const src = route.params?.src;
     const star = route.params?.star;
-    const [reviewText, setReviewText] = useState('');
     const [image, setImage] = useState<string>(null);
     const [title, setTitle] = useState('');
     const [url, setUrl] = useState('');
     const [git, setGit] = useState('');
-    const [dsc, setDsc] = useState("");
-    const db = firebase.firestore()
+    // const [dsc, setDsc] = useState("");
+    // const db = firebase.firestore()
     const [loading, setLoading] = useState<boolean>(false);
 
     useEffect(() => {
@@ -42,7 +43,7 @@ export default function UploadScreen({ navigation, route }) {
         let result = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.All,
             allowsEditing: true,
-            aspect: [4, 3],
+            // aspect: [4, 3],
             quality: 1,
         });
         if (!result.cancelled) {
@@ -50,29 +51,31 @@ export default function UploadScreen({ navigation, route }) {
         }
     };
     const handleCreate = async () => {
-        await
-            handleUpload()
-        db.collection('contents').add({
+        const content = {
             name: `${user.name}`,
             title,
             src: `${image}`,
-            dsc,
             git,
             url,
             userId: `${user.userId}`,
             timestamp: firebase.firestore.FieldValue.serverTimestamp(),
             star: 0,
-        })
-            .then((docref) => {
-                db.collection('contents').doc(docref.id).set({
-                    id: docref.id,
-                }, { merge: true }//←上書きされないおまじない
-                )
-            })
-            .catch((error) => {
-                console.error("Error writing document: ", error);
-            })
-        navigation.goBack();
+            batu: 0
+        } as Detail
+        await
+            handleUpload()
+        await createContent(content);
+        // db.collection('contents').add(content)
+        //     .then((docref) => {
+        //         db.collection('contents').doc(docref.id).set({
+        //             id: docref.id,
+        //         }, { merge: true }//←上書きされないおまじない
+        //         )
+        //     })
+        //     .catch((error) => {
+        //         console.error("Error writing document: ", error);
+        //     })
+        navigation.navigate('Main')
     }
     const uploadImage = async (uri: string, path: string) => {
         const localUri = await fetch(uri);
@@ -109,23 +112,24 @@ export default function UploadScreen({ navigation, route }) {
                     <TextInput
                         placeholder="Title?"
                         style={styles.input}
-                        value={title}
+                        value="test"
+                        // value={title}
                         onChangeText={setTitle}
-                        multiline={true}
+                    // multiline={true}
                     />
-                    <TextInput
+                    {/* <TextInput
                         placeholder="What's your Review?"
                         style={styles.input}
                         value={reviewText}
                         onChangeText={setReviewText}
                         multiline={true}
-                    />
-                    <TextInput
+                    /> */}
+                    {/* <TextInput
                         placeholder="詳細"
                         style={styles.input}
                         value={dsc}
                         onChangeText={setDsc}
-                    />
+                    /> */}
                     <TextInput
                         placeholder="　url"
                         style={styles.input}
@@ -140,7 +144,8 @@ export default function UploadScreen({ navigation, route }) {
                     />
                     <ButtonIcon name="camera-retro" onPress={pickImage} color="gray" />
                     {image ? <Image source={{ uri: image }} style={styles.image} /> : null}
-                    <Button onPress={() => handleCreate()} title="記事を投稿する" />
+                    <ButtonText onPress={() => handleCreate()} text="投稿する" />
+                    {/* <Button onPress={() => handleCreate()} title="記事を投稿する" /> */}
                 </View>
             </TouchableWithoutFeedback>
         </SafeAreaView>
@@ -153,20 +158,10 @@ const styles = StyleSheet.create({
         height: 150,
         resizeMode: "cover",
     },
-    button: {
-        flexBasis: '100%',
-        color: 'white',
-        backgroundColor: "black",
-        justifyContent: 'center',
-    },
     container: {
         width: "100%",
         height: 250,
         resizeMode: "cover",
-    },
-    heading: {
-        fontSize: 24,
-        color: 'rgba(14, 13, 13, .38)',
     },
     input: {
         marginTop: 5,

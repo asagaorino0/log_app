@@ -9,6 +9,7 @@ export type Review = {
     reviewText: string,
     navigation: any,
     star: number
+    batu: number
     reviewId: string
     createdAt: string
     timestamp: any,

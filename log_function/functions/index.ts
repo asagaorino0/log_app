@@ -18,22 +18,36 @@ const db = admin.firestore();
 exports.onReview = functions
     .region("us-central1")
     .firestore.document("contents/{itemId}/reviews/{reviewId}")
-    .onUpdate(async (change, context) => {
+    .onWrite(async (change, context) => {
         const { itemId, reviewId } = context.params;
         const review = change.after.data() as Review;
         const db = admin.firestore();
         try {
-            const contentsRef = db.collection("contents").doc(itemId);
+            const contentsRef = db.collection("contents")
+                .doc(itemId);
             const contentsDoc = await contentsRef.get();
             const contents = contentsDoc.data() as Detail;
-            console.log(contents.title)
+            console.log(contents.star)
             index.saveObject({
                 objectID: reviewId,
                 ...review,
-            });
+            })
+            // const fetchReviews = async () => {
+            const reviewDocs = await
+                db.collection("contents")
+                    .doc(itemId)
+                    .collection("reviews")
+                    .orderBy("timestamp", "desc")
+                    .get();
+            return reviewDocs.docs.map(
+                (doc: any) => ({ ...doc.data(), reviewId: doc.id } as Review),
+                console.log(review.star),
+            )
         } catch (err) {
             console.log(err);
         }
+        // await reviewDocs.update(params);
+        // console.log([review.star])
     });
 
 exports.updateUser = functions

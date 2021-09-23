@@ -8,4 +8,5 @@ export type RootStackParamList = {
     Search: undefined;
     Review: { detail: Detail };
     ButtonIcon: undefined;
+    ButtonImage: undefined;
 };

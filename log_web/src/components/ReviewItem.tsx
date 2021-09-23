@@ -1,19 +1,16 @@
-
-
 import React, { useContext } from 'react';
-import { View, StyleSheet, Text, Button, Linking } from "react-native";
+import { View, StyleSheet, Text, Linking } from "react-native";
 import firebase, { getReviews } from "../lib/firebase";
 import moment from "moment";
 import { Stars } from "../components/Stars";
 import { Review } from "../types/review";
 import { ReviewsContext } from "../context/reviewsContext";
 import Hyperlink from 'react-native-hyperlink'
-import ButtonImage from '../components/ButtonImage'
+import { ButtonImage } from '../components/ButtonImage'
 import { ButtonDel } from "../components/ButtonDel";
 
 type Props = {
     review: Review;
-    ButtonImege: Review;
 };
 
 export const ReviewItem: React.FC<Props> = ({ review }: Props) => {
@@ -22,7 +19,7 @@ export const ReviewItem: React.FC<Props> = ({ review }: Props) => {
     const id = review.itemId
     const { reviews, setReviews } = useContext(ReviewsContext);
     const deleteId = async () => {
-        alert(`${review.reviewId}:削除！`)
+        alert(`${review.reviewText}:削除しました！`)
         await
             db.collection("contents").doc(review.itemId).collection("reviews").doc(`${review.reviewId}`).delete()
         const reviews = await getReviews(id);
@@ -48,23 +45,26 @@ export const ReviewItem: React.FC<Props> = ({ review }: Props) => {
                     <Text style={styles.reviewText} onPress={() => openGit(review.src)}>{review.reviewText}</Text>
                 </View>
                 <Text
-                    style={styles.nameText}
-                >{`${review.name}   ${timestamp}`}</Text>
+                    style={styles.text}
+                >{timestamp}</Text>
                 {review.url.length !== 0 &&
                     <Hyperlink linkDefault={true}>
-                        <Text style={styles.urlText}>
+                        <Text style={styles.text}>
                             {`参考サイト：${review.url}`}
                         </Text>
                     </Hyperlink>}
             </View>
             <View style={styles.rightContainer}  >
-                <ButtonImage style={styles.image} source={{ url: review.src }} onPress={() => openUrl(review.src)}></ButtonImage>
+                <ButtonImage
+                    style={styles.image}
+                    source={{ url: review.src }}
+                    onPress={() => openUrl(review.src)}>
+                </ButtonImage>
                 <ButtonDel
                     iconName="x"
                     onPress={deleteId}
                 />
             </View>
-            {/* <Button onPress={deleteId} title="✕" /> */}
         </View>
     );
 };
@@ -78,27 +78,21 @@ const styles = StyleSheet.create({
     },
     leftContainer: {
         flexDirection: "column",
-        // justifyContent: "flex-start",
     },
     rightContainer: {},
     image: {
         width: 100,
         height: 100,
-        // justifyContent: "flex-end",
     },
     reviewText: {
         marginTop: 4,
         color: "#000",
         width: 210,
     },
-    urlText: {
+    text: {
         marginTop: 4,
         color: "#888",
         fontSize: 12,
         width: 210,
-    },
-    nameText: {
-        color: "#888",
-        fontSize: 12,
     },
 });

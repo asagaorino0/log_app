@@ -12,4 +12,7 @@ export type Detail = {
     reviewText: string
     route: any
     git: string
+    batu: number
+    timestamp: any
+    userId: string
 }
