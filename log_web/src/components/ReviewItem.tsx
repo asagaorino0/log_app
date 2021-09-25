@@ -46,7 +46,7 @@ export const ReviewItem: React.FC<Props> = ({ review }: Props) => {
                 </View>
                 <Text
                     style={styles.text}
-                >{timestamp}</Text>
+                >{timestamp}{review.translated.ja}</Text>
                 {review.url.length !== 0 &&
                     <Hyperlink linkDefault={true}>
                         <Text style={styles.text}>

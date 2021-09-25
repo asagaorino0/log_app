@@ -20,7 +20,6 @@ type Props = {
 }
 
 // export default function ButtonImage({ 
-
 export const ButtonImage: React.FC<Props> = ({
     onPress,
     src,

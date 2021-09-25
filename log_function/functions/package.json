@@ -13,6 +13,7 @@
   },
   "main": "lib/index.js",
   "dependencies": {
+    "@google-cloud/translate": "^6.3.0",
     "@types/jsdom": "^16.2.13",
     "algoliasearch": "^4.10.5",
     "axios": "^0.21.4",

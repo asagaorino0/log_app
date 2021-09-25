@@ -3,7 +3,7 @@ import { View, Text, TextInput, StyleSheet, Image, TouchableWithoutFeedback, Key
 import firebase, { createReview } from "../lib/firebase";
 import { loginUser } from "../lib/firebase";
 import { getReviews } from "../lib/firebase";
-import ImagePicker from 'expo-image-picker';
+import * as ImagePicker from 'expo-image-picker';
 import ButtonIcon from '../components/ButtonIcon'
 import ButtonText from '../components/Button'
 import { Loading } from '../components/Loading'
@@ -23,7 +23,6 @@ export default function ReviewScreen({ navigation, route }) {
     const item = route.params;
     const title = route.params?.title;
     const id = route.params?.id;
-    // const star = route.params?.star;
     const [reviewText, setReviewText] = useState('');
     const [storagePath, setStoragePath] = useState("");
     const [uri, setUri] = useState('');
@@ -32,8 +31,6 @@ export default function ReviewScreen({ navigation, route }) {
     const [git, setGit] = useState('');
     const [url, setUrl] = useState('');
     const [dsc, setDsc] = useState("");
-    // const [itemId, setItemId] = useState('');
-    // const db = firebase.firestore()
     const [loading, setLoading] = useState<boolean>(false);
     const daytime = moment().format("YYYYMMDDhhmmss");
 
@@ -76,23 +73,9 @@ export default function ReviewScreen({ navigation, route }) {
             timestamp: firebase.firestore.FieldValue.serverTimestamp(),
             star,
             batu: 0,
+            translated: "",
         } as Review;
         await createReview(review, id);
-        // db.collection("contents")
-        //     .doc(id)
-        //     .collection("reviews")
-        //     .add(review)
-        //     .then((docref) => {
-        //         db.collection('contents')
-        //             .doc(id)
-        //             .collection("reviews").doc(docref.id).set({
-        //                 reviewId: docref.id,
-        //             }, { merge: true }//←上書きされないおまじない
-        //             )
-        //     })
-        //     .catch((error) => {
-        //         console.error("Error writing document: ", error);
-        //     })
         fetchReviews()
         setLoading(false);
         navigation.goBack();

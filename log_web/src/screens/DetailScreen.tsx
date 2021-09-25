@@ -5,14 +5,10 @@ import { Review } from "../types/review";
 import { StackNavigationProp } from "@react-navigation/stack/lib/typescript/src/types";
 import { RouteProp } from "@react-navigation/native";
 import { RootStackParamList } from "../types/rootStackParamList";
-import { AntDesign } from '@expo/vector-icons';
 import { ReviewItem } from "../components/ReviewItem";
-// import classname from 'classnames'
-// import { makeStyles } from '@material-ui/core/styles';
 import { UserContext } from "../context/userContext";
 import { ReviewsContext } from "../context/reviewsContext";
 import { getReviews } from "../lib/firebase";
-// import { getStars } from "../lib/firebase";
 import { ButtonImage } from '../components/ButtonImage'
 import Hyperlink from 'react-native-hyperlink'
 import { ButtonPlus } from "../components/ButtonPlus";
@@ -23,8 +19,6 @@ export default function DetailScreen({ navigation, route }) {
     const { detail } = route.params;
     const title = route.params?.title;
     const src = route.params?.src;
-    // const name = route.params?.name;
-    // const star = route.params?.star;
     const url = route.params?.url;
     const git = route.params?.git;
     const id = route.params?.id;
@@ -35,7 +29,6 @@ export default function DetailScreen({ navigation, route }) {
         });
         const fetchReviews = async () => {
             const reviews = await getReviews(id);
-            // const reviews = await getStars(id);
             setReviews(reviews);
         };
         fetchReviews();
@@ -44,9 +37,7 @@ export default function DetailScreen({ navigation, route }) {
     type Props = {
         navigation: StackNavigationProp<RootStackParamList, "Detail">;
         route: RouteProp<RootStackParamList, "Detail">;
-        // ButtonImege: any;
     };
-
 
     const handleDetail = (item: Detail) => {
         navigation.navigate({
@@ -94,11 +85,6 @@ export default function DetailScreen({ navigation, route }) {
                 iconName="plus"
                 onPress={() => handleDetail(route.params)}
             />
-            {/* <TouchableOpacity
-                onPress={() => handleDetail(route.params)}
-            >
-                <AntDesign name="pluscircle" size={40} color="tomato" />
-            </TouchableOpacity> */}
         </View>
     );
 }
@@ -115,7 +101,6 @@ const styles = StyleSheet.create({
     },
     container: {
         flex: 1,
-        // justifyContent: 'center',
         alignItems: 'center',
     },
     nameText: {

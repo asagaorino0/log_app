@@ -1,3 +1,7 @@
+type translated = {
+    ja: string
+    en: string
+};
 export type Review = {
     setReview: []
     userId: string,
@@ -16,4 +20,5 @@ export type Review = {
     itemId: string
     ButtonImege: any;
     git: string;
+    translated: translated
 }

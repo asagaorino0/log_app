@@ -10,6 +10,7 @@ import ButtonIcon from '../components/ButtonIcon'
 import ButtonText from '../components/Button'
 import { UserContext } from "../context/userContext";
 import { Detail } from '../types/detail'
+import { Loading } from '../components/Loading'
 
 export default function UploadScreen({ navigation, route }) {
     const { user } = useContext(UserContext)
@@ -21,14 +22,11 @@ export default function UploadScreen({ navigation, route }) {
     const [title, setTitle] = useState('');
     const [url, setUrl] = useState('');
     const [git, setGit] = useState('');
-    // const [dsc, setDsc] = useState("");
-    // const db = firebase.firestore()
     const [loading, setLoading] = useState<boolean>(false);
 
     useEffect(() => {
         const fetchUser = async () => {
             const user = await loginUser();
-            console.log(user.name)
             setName(user.name)
         };
         fetchUser();
@@ -43,7 +41,6 @@ export default function UploadScreen({ navigation, route }) {
         let result = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.All,
             allowsEditing: true,
-            // aspect: [4, 3],
             quality: 1,
         });
         if (!result.cancelled) {
@@ -51,6 +48,7 @@ export default function UploadScreen({ navigation, route }) {
         }
     };
     const handleCreate = async () => {
+        setLoading(true);
         const content = {
             name: `${user.name}`,
             title,
@@ -60,21 +58,14 @@ export default function UploadScreen({ navigation, route }) {
             userId: `${user.userId}`,
             timestamp: firebase.firestore.FieldValue.serverTimestamp(),
             star: 0,
-            batu: 0
+            batu: 0,
+            dsc: "good morning!",
+            translated: "",
         } as Detail
         await
             handleUpload()
         await createContent(content);
-        // db.collection('contents').add(content)
-        //     .then((docref) => {
-        //         db.collection('contents').doc(docref.id).set({
-        //             id: docref.id,
-        //         }, { merge: true }//←上書きされないおまじない
-        //         )
-        //     })
-        //     .catch((error) => {
-        //         console.error("Error writing document: ", error);
-        //     })
+        setLoading(false);
         navigation.navigate('Main')
     }
     const uploadImage = async (uri: string, path: string) => {
@@ -112,24 +103,9 @@ export default function UploadScreen({ navigation, route }) {
                     <TextInput
                         placeholder="Title?"
                         style={styles.input}
-                        value="test"
-                        // value={title}
+                        value={title}
                         onChangeText={setTitle}
-                    // multiline={true}
                     />
-                    {/* <TextInput
-                        placeholder="What's your Review?"
-                        style={styles.input}
-                        value={reviewText}
-                        onChangeText={setReviewText}
-                        multiline={true}
-                    /> */}
-                    {/* <TextInput
-                        placeholder="詳細"
-                        style={styles.input}
-                        value={dsc}
-                        onChangeText={setDsc}
-                    /> */}
                     <TextInput
                         placeholder="　url"
                         style={styles.input}
@@ -145,7 +121,7 @@ export default function UploadScreen({ navigation, route }) {
                     <ButtonIcon name="camera-retro" onPress={pickImage} color="gray" />
                     {image ? <Image source={{ uri: image }} style={styles.image} /> : null}
                     <ButtonText onPress={() => handleCreate()} text="投稿する" />
-                    {/* <Button onPress={() => handleCreate()} title="記事を投稿する" /> */}
+                    <Loading visible={loading} />
                 </View>
             </TouchableWithoutFeedback>
         </SafeAreaView>

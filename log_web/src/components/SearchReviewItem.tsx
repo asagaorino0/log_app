@@ -8,7 +8,7 @@ import { Stars } from "../components/Stars";
 import { Review } from "../types/review";
 import { ReviewsContext } from "../context/reviewsContext";
 import Hyperlink from 'react-native-hyperlink'
-import ButtonImage from '../components/ButtonImage'
+import { ButtonImage } from '../components/ButtonImage'
 import { ButtonDel } from "../components/ButtonDel";
 
 type Props = {
@@ -22,12 +22,9 @@ export const SearchReviewItem: React.FC<Props> = ({ review }: Props) => {
     const id = review.itemId
     const { reviews, setReviews } = useContext(ReviewsContext);
     const deleteId = async () => {
-        alert(`${review.reviewText}:非表示！`)
+        alert(`${review.reviewText}:削除しました！`)
         await
-            db.collection("contents").doc(review.itemId).collection("reviews").doc(`${review.reviewId}`).set({
-                batu: 1,
-            }, { merge: true }//←上書きされないおまじない
-            )
+            db.collection("contents").doc(review.itemId).collection("reviews").doc(`${review.reviewId}`).delete()
         const reviews = await getReviews(id);
         setReviews(reviews);
     };
@@ -50,7 +47,8 @@ export const SearchReviewItem: React.FC<Props> = ({ review }: Props) => {
             <View style={styles.leftContainer}>
                 <View>
                     <Stars star={review.star} starSize={16} textSize={12} />
-                    <Text style={styles.reviewText} onPress={() => openGit(review.src)}>{review.reviewText}{review.batu}</Text>
+                    <Text style={styles.reviewText} onPress={() => openGit(review.src)}>{review.reviewText}</Text>
+                    <Text style={styles.reviewText} >場所：{review.title}</Text>
                 </View>
                 {review.url.length !== 0 &&
                     <Hyperlink linkDefault={true}>
@@ -58,7 +56,12 @@ export const SearchReviewItem: React.FC<Props> = ({ review }: Props) => {
                             {`参考サイト：${review.url}`}
                         </Text>
                     </Hyperlink>}
-                <Text style={styles.reviewText} >{review.dsc}</Text>
+                {/* <Text style={styles.reviewText} >{review.dsc}</Text> */}
+                {review.dsc.length !== 0 &&
+                    <Text style={styles.urlText}>
+                        {`翻訳：${review.translated.ja}`}
+                    </Text>
+                }
             </View>
             <View style={styles.rightContainer}  >
                 <ButtonImage style={styles.image} source={{ uri: review.src }} onPress={() => openUrl(review.src)}></ButtonImage>

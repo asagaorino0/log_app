@@ -4,7 +4,6 @@ import "firebase/firestore";
 import "firebase/storage";
 import Constants from 'expo-constants';
 import { User } from "../types/user";
-import { Detail } from '../types/detail'
 import { Review } from "../types/review";
 
 if (!firebase.apps.length) {
@@ -24,20 +23,6 @@ export const loginUser = async () => {
         name: userDoc.data().name,
     } as User;
 };
-// export const getReviews = async (id: string) => {
-//     const reviewDocs = await
-//         db
-//             .collection("contents")
-//             .doc(id)
-//             .collection("reviews")
-//             // .where('batu', '==', 0)
-//             .orderBy("timestamp", "desc")
-//             .get();
-//     return reviewDocs.docs.map(
-//         (doc) => ({ ...doc.data(), reviewId: doc.id } as Review)
-//         // , alert(id),
-//     );
-// };
 export const getReviews = async (id: string) => {
     const reviewDocs = await
         db

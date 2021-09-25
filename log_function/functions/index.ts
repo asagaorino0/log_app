@@ -15,39 +15,142 @@ const admin = require('firebase-admin');
 admin.initializeApp();
 const db = admin.firestore();
 
+// const { TranslationServiceClient } = require('@google-cloud/translate');
+const { TranslationServiceClient } = require("@google-cloud/translate").v3;
+
+const projectId = "log-app-6b654";
+const location = "asia-northeast2";
+
+// // 言語判定
+// async function detectLanguage(text: any) {
+//     const translationClient = new TranslationServiceClient();
+//     const req = {
+//         parent: translationClient.locationPath(projectId, location),
+//         content: text,
+//         mimeType: "text/plain"
+//     };
+//     const res = await translationClient.detectLanguage(req);
+//     // let sourceLang = null;
+//     for (const elem of res) {
+//         if (elem == null) // なぜかnullがレスポンスに含まれる
+//             continue;
+//         return elem["languages"][0]["languageCode"];
+//     }
+// }
+
+// // 翻訳
+// async function translate(text: any, sourceLang: any, targetLang: any) {
+//     const translationClient = new TranslationServiceClient();
+//     const req = {
+//         parent: translationClient.locationPath(projectId, location),
+//         contents: [text],
+//         mimeType: "text/plain",
+//         sourceLanguageCode: sourceLang,
+//         targetLanguageCode: targetLang,
+//     };
+//     const res = await translationClient.translateText(req);
+//     for (const elem of res) {
+//         if (elem == null) // なぜかnullがレスポンスに含まれる
+//             continue;
+//         return elem["translations"][0]["translatedText"];
+//     }
+// }
+
+// async function sample(text: any) {
+//     const result = {};
+//     console.log(text)
+//     // result["original"] = text;
+
+
+//     // 言語判定
+//     const sourceLang = await detectLanguage(text);
+
+//     // 翻訳
+//     for (const targetLang of ["en", "ja", "zh-TW", "zh-CN", "ge"]) {
+//         if (targetLang == sourceLang) // Target language can't be equal to source language. というエラーを防ぐため
+//             continue;
+//         const targetText = await translate(text, sourceLang, targetLang);
+//         console.log(targetText)
+//         // result[targetLang] = targetText;
+//     }
+
+//     return result;
+// }
+
+// exports.helloWorld = async function (req: any, res: any) {
+//     sample("Hello, World!").then(result => {
+//         console.log(result);
+//         res.send(result);
+//     }).catch(err => {
+//         console.log(err);
+//     });
+// };
+
+
+const translate = new TranslationServiceClient();
+// List of output languages.
+const LANGUAGES = ["en", "ja", "zh-TW", "zh-CN"];
+// Translate an incoming message.
+exports.translate = functions
+    .region("us-central1")
+    .database.ref("contents/{itemId}/reviews/{reviewId}").onUpdate(
+        (change, context) => {
+            const snapshot = change.after;
+            if (snapshot.val().translated) {
+                return null;
+            }
+            const promises = [];
+            for (let i = 0; i < LANGUAGES.length; i++) {
+                const language = LANGUAGES[i];
+
+                if (language !== context.params.languageID) {
+                    promises.push(async () => {
+                        const results = await translate.translateText({
+                            contents: [snapshot.val().message],
+                            parent: translate.locationPath(projectId, location),
+                            sourceLanguageCode: context.params.languageID,
+                            targetLanguageCode: language
+                        });
+                        return admin.database().ref(`contents/{itemId}/reviews/{reviewId}/${snapshot.key}`).set({
+                            message: results[0],
+                            translated: true,
+                        });
+                    });
+                }
+            }
+            return Promise.all(promises);
+        });
+
+
 exports.onReview = functions
     .region("us-central1")
     .firestore.document("contents/{itemId}/reviews/{reviewId}")
-    .onWrite(async (change, context) => {
+    .onUpdate(async (change, context) => {
         const { itemId, reviewId } = context.params;
         const review = change.after.data() as Review;
         const db = admin.firestore();
         try {
-            const contentsRef = db.collection("contents")
-                .doc(itemId);
+            const contentsRef = db.collection("contents").doc(itemId);
             const contentsDoc = await contentsRef.get();
             const contents = contentsDoc.data() as Detail;
-            console.log(contents.star)
+            console.log(contents.title)
             index.saveObject({
                 objectID: reviewId,
                 ...review,
-            })
-            // const fetchReviews = async () => {
-            const reviewDocs = await
-                db.collection("contents")
-                    .doc(itemId)
-                    .collection("reviews")
-                    .orderBy("timestamp", "desc")
-                    .get();
-            return reviewDocs.docs.map(
-                (doc: any) => ({ ...doc.data(), reviewId: doc.id } as Review),
-                console.log(review.star),
-            )
+            });
         } catch (err) {
             console.log(err);
         }
-        // await reviewDocs.update(params);
-        // console.log([review.star])
+    });
+
+exports.delReview = functions
+    .region("us-central1")
+    .firestore.document("contents/{itemId}/reviews/{reviewId}")
+    .onDelete((snap, context) => {
+        const { reviewId } = context.params;
+        const deletedValue = snap.data();
+        console.log(deletedValue)
+        index.deleteObject(reviewId)
     });
 
 exports.updateUser = functions

@@ -1,8 +1,6 @@
 import * as React from 'react';
 import { StyleSheet, Image, Dimensions, TouchableOpacity } from 'react-native';
 import { Card, Title, Paragraph, Text, Button } from 'react-native-paper';
-import { FontAwesome } from '@expo/vector-icons';
-import { StackNavigationProp } from "@react-navigation/stack";
 import { Detail } from '../types/detail'
 
 export default function SimpleCard({ contents }: { contents: Detail }
@@ -15,7 +13,6 @@ export default function SimpleCard({ contents }: { contents: Detail }
                     source={{ uri: `${contents.src}` }}
                     style={styles.image}
                 />
-                {/* <Stars star={contents.star} starSize={16} textSize={12} /> */}
             </Card.Content>
         </Card >
     )
@@ -33,8 +30,6 @@ const styles = StyleSheet.create({
     container: {
         width: width / 2,
         backgroundColor: "#fff",
-        // padding: 6,
-        // backgroundColor: 'red',
     },
 })
 

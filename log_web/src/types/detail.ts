@@ -15,4 +15,5 @@ export type Detail = {
     batu: number
     timestamp: any
     userId: string
+    translated: string
 }
