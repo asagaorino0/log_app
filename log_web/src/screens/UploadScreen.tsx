@@ -59,7 +59,7 @@ export default function UploadScreen({ navigation, route }) {
             timestamp: firebase.firestore.FieldValue.serverTimestamp(),
             star: 0,
             batu: 0,
-            dsc: "good morning!",
+            dsc: "",
             translated: "",
         } as Detail
         await

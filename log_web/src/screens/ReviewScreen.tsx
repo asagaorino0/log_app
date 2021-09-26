@@ -73,7 +73,10 @@ export default function ReviewScreen({ navigation, route }) {
             timestamp: firebase.firestore.FieldValue.serverTimestamp(),
             star,
             batu: 0,
-            translated: "",
+            translated: {
+                en: "",
+                ja: "",
+            },
         } as Review;
         await createReview(review, id);
         fetchReviews()

@@ -1,6 +1,7 @@
 import React, { useContext } from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import MainScreen from '../screens/MainScreen'
+import MikaiketuScreen from '../screens/MikaiketuScreen'
 import DetailScreen from '../screens/DetailScreen';
 import ReviewScreen from '../screens/ReviewScreen';
 import { UserContext } from "../context/userContext";
@@ -38,6 +39,10 @@ const RootStackNavigator = () => {
                 <RootStack.Screen
                     name="Review"
                     component={ReviewScreen}
+                />
+                <RootStack.Screen
+                    name="Mikaiketu"
+                    component={MikaiketuScreen}
                 />
             </RootStack.Group>
             <RootStack.Group screenOptions={{ presentation: 'modal' }}>

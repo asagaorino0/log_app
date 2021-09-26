@@ -9,7 +9,6 @@ export default function SubScreen({ navigation }: { navigation: any }) {
     const [name, setName] = useState('');
     const db = firebase.firestore()
     const { setUser, user } = useContext(UserContext);
-    // const { user } = useContext(UserContext)
 
     useEffect(() => {
         const fetchUser = async () => {

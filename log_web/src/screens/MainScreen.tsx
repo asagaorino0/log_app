@@ -8,16 +8,13 @@ import { Detail } from '../types/detail'
 import { StackNavigationProp } from "@react-navigation/stack/lib/typescript/src/types";
 import { RouteProp } from "@react-navigation/native";
 import { RootStackParamList } from "../types/rootStackParamList";
-// import { makeStyles } from '@material-ui/core/styles';
 
 type Props = {
     navigation: StackNavigationProp<RootStackParamList, "Main">;
 };
 export default function MainScreen({ navigation, route }: { navigation: any, route: any }) {
-    // const [uid, setUid] = useState(`${route.params?.uid}`);
     const ref = React.useRef(null);
     const [contents, setContents] = useState([]);
-    // const { setContents } = useContext(ConponentContext);
     const db = firebase.firestore()
     const { setUser } = useContext(UserContext);
     const [userId, setUserId] = useState('');
@@ -37,16 +34,12 @@ export default function MainScreen({ navigation, route }: { navigation: any, rou
             .firestore()
             .collection("contents")
             .orderBy("title")
-            // .select('title')
             .onSnapshot((snapshot) => {
                 const contents = snapshot.docs.map((doc, id) => {
                     return doc.id &&
                         doc.data()
                 });
                 setContents(contents);
-                // const titleArray = array_column(contents, "title");
-
-                // console.log(titleArray)
             })
     }, [])
     return (

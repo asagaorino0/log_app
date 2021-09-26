@@ -3,7 +3,9 @@ type translated = {
     en: string
 };
 export type Review = {
+    translated: translated
     setReview: []
+    reviewId: string,
     userId: string,
     name: string,
     src: string,
@@ -14,11 +16,9 @@ export type Review = {
     navigation: any,
     star: number
     batu: number
-    reviewId: string
     createdAt: string
-    timestamp: any,
     itemId: string
     ButtonImege: any;
     git: string;
-    translated: translated
+    timestamp: any,
 }

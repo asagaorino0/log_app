@@ -3,7 +3,6 @@ import { StyleSheet, SafeAreaView, TextInput, FlatList } from "react-native";
 import { StackNavigationProp } from "@react-navigation/stack/lib/typescript/src/types";
 import { RouteProp } from "@react-navigation/native";
 import { RootStackParamList } from "../types/rootStackParamList";
-// import { searchReview } from "../lib/algolia";
 import { Review } from "../types/review";
 import { SearchReviewItem } from "../components/SearchReviewItem";
 import algoliasearch, { SearchClient } from "algoliasearch";
@@ -20,7 +19,6 @@ const searchReview = async (query: string) => {
 type Props = {
     navigation: StackNavigationProp<RootStackParamList, "Search">;
     route: RouteProp<RootStackParamList, "Search">;
-
 };
 // export const SearchScreen: React.FC<Props> = ({ navigation, route }: Props) => {
 export default function SearchScreen({ navigation, route }) {

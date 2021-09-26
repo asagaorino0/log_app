@@ -37,16 +37,25 @@ export const ReviewItem: React.FC<Props> = ({ review }: Props) => {
             await Linking.openURL(review.git);
         }
     }
+    const ja = review.translated.ja
+    const openTranslated = async (ja) => {
+        alert(ja)
+    }
+
     return (
         <View style={styles.container}>
             <View style={styles.leftContainer}>
                 <View>
                     <Stars star={review.star} starSize={16} textSize={12} />
-                    <Text style={styles.reviewText} onPress={() => openGit(review.src)}>{review.reviewText}</Text>
+                    <Text style={styles.reviewText}>{review.reviewText}</Text>
                 </View>
-                <Text
-                    style={styles.text}
-                >{timestamp}{review.translated.ja}</Text>
+                <Text style={styles.text}>{timestamp}</Text>
+                {review.translated.ja.length !== 0 &&
+                    <Text onPress={() => openTranslated(review.translated.ja)} style={styles.text}>日本語に翻訳</Text>
+                }
+                {review.git.length !== 0 &&
+                    <Text style={styles.text} onPress={() => openGit(review.git)}>Git hubを表示</Text>
+                }
                 {review.url.length !== 0 &&
                     <Hyperlink linkDefault={true}>
                         <Text style={styles.text}>

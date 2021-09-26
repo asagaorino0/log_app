@@ -7,7 +7,9 @@ export type RootStackParamList = {
     Detail: { detail: Detail };
     Sub: undefined;
     Search: { review: Review };
-    Review: { detail: Detail };
+    Review: undefined;
+    ReviewItem: { detail: Detail };
+    Mikaiketu: { detail: Detail };
     ButtonIcon: undefined;
     ButtonImage: undefined;
 };

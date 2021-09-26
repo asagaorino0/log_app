@@ -54,6 +54,24 @@ export const createReview = async (review: any, id: string) => {
                 console.error("Error writing document: ", error);
             })
 }
+export const copyReview = async (review: any, itemId: string) => {
+    const reviewDocs = await
+        db.collection("contents")
+            .doc("ZMTTpFz6iD4AAJiAsoer")
+            .collection("reviews")
+            .add(review)
+            .then((docref) => {
+                db.collection('contents')
+                    .doc(itemId)
+                    .collection("reviews").doc(docref.id).set({
+                        reviewId: docref.id,
+                    }, { merge: true }//←上書きされないおまじない
+                    )
+            })
+            .catch((error) => {
+                console.error("Error writing document: ", error);
+            })
+}
 export const createContent = async (content: any) => {
     const contentDocs = await
         db.collection("contents")

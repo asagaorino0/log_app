@@ -54,6 +54,22 @@ export default function DetailScreen({ navigation, route }) {
             merge: true,
         });
     }
+    const handleMikaiketu = (item: Review) => {
+        navigation.navigate({
+            name: 'Mikaiketu',
+            params: {
+                title: item.title,
+                name: user.name,
+                star: item.star,
+                src: item.src,
+                url: item.url,
+                reviewId: item.reviewId,
+                itemId: item.itemId,
+                git: item.git,
+            },
+            merge: true,
+        });
+    }
     const onPress = async (url) => {
         const supported = await Linking.canOpenURL(url);
         if (supported) {
@@ -72,6 +88,9 @@ export default function DetailScreen({ navigation, route }) {
                 </Hyperlink>
                 {/* } */}
             </View>
+            {/* <TouchableOpacity
+                onPress={() => handleMikaiketu(route.params)}
+            > */}
             <View style={styles.container}>
                 <FlatList
                     data={reviews}
@@ -81,6 +100,7 @@ export default function DetailScreen({ navigation, route }) {
                     keyExtractor={(item: Review) => item.reviewId}
                 />
             </View>
+            {/* </TouchableOpacity> */}
             <ButtonPlus
                 iconName="plus"
                 onPress={() => handleDetail(route.params)}
